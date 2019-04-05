@@ -1,0 +1,451 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{9094c221-a37f-4922-8a97-021d0cf82a86}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\core\array.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\core\base64.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\core\byteorder.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\core\color.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\core\config.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\core\core.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\core\log.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\core\memmgr.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\core\path.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\core\rect.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\core\rectpack.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\core\serialization.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\core\string.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\core\string_utils.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\core\thread.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\core\thread_posix.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\core\thread_win32.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\core\utf32string.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\core\utility.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\editor\editor.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\external\miniz_tinfl.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\fbx\fbx.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\fbx\fbx_ascii.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\fbx\fbx_binary.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\fbx\fbx_node.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\font\font.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\gui\border.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\gui\button.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\gui\canvas.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\gui\draw.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\gui\grid.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\gui\gui.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\gui\scroll_bar.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\gui\scroll_content_presenter.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\gui\scroll_viewer.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\gui\slide_selector.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\gui\text.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\gui\text_box.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\gui\window.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\math\mathlib.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\math\triangulator.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\physics\body.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\physics\collision.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\physics\octree.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\physics\physics.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\platform\win32.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\platform\x11.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\renderer\renderer.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\renderer\surface.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\resources\image.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\resources\model.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\resources\resource.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\resources\texture.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\scene\animation.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\scene\camera.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\scene\light.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\scene\mesh.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\scene\node.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\scene\scene.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\sound\buffer.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\sound\context.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\sound\decoder.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\sound\device.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\sound\device_alsa.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\sound\device_dsound.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\sound\listener.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\sound\sound.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\sound\source.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\vg\vgraster.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\de_main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\DmitrysEngine\core\array.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\core\base64.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\core\byteorder.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\core\clipboard.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\core\color.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\core\config.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\core\core.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\core\event.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\core\linked_list.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\core\log.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\core\memmgr.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\core\path.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\core\rect.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\core\rectpack.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\core\serialization.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\core\string.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\core\string_utils.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\core\thread.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\core\time.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\core\utf32string.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\core\utility.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\editor\editor.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\external\dsound.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\external\GL\glext.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\external\GL\wglext.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\external\miniz_tinfl.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\fbx\fbx.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\fbx\fbx_ascii.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\fbx\fbx_binary.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\fbx\fbx_node.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\font\font.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\gui\border.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\gui\button.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\gui\canvas.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\gui\draw.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\gui\grid.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\gui\gui.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\gui\scroll_bar.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\gui\scroll_content_presenter.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\gui\scroll_viewer.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\gui\slide_selector.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\gui\text.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\gui\text_box.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\gui\window.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\input\input.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\math\mathlib.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\math\triangulator.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\physics\body.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\physics\collision.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\physics\octree.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\physics\physics.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\renderer\renderer.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\renderer\surface.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\resources\builtin_fonts.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\resources\image.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\resources\model.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\resources\resource.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\resources\resource_fdecl.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\resources\texture.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\scene\animation.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\scene\camera.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\scene\light.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\scene\mesh.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\scene\node.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\scene\scene.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\sound\buffer.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\sound\context.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\sound\decoder.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\sound\device.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\sound\listener.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\sound\sound.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\sound\source.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\vg\vgraster.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\de_main.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
