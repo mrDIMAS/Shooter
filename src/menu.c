@@ -78,6 +78,14 @@ static void videomode_selector_on_selection_changed(de_gui_node_t* node, int n) 
 	de_core_set_video_mode(page->menu->game->core, &page->video_modes.data[n]);
 }
 
+static void sound_volume_changed(de_gui_node_t* node) {
+	DE_UNUSED(node);
+}
+
+static void music_volume_changed(de_gui_node_t* node) {
+	DE_UNUSED(node);
+}
+
 static void settings_page_init(menu_t* menu, settings_page_t* page) {
 	de_gui_t* gui = de_core_get_gui(menu->game->core);
 
@@ -102,73 +110,78 @@ static void settings_page_init(menu_t* menu, settings_page_t* page) {
 	/* videomode */
 	{
 		de_gui_node_t* lbl = de_gui_node_create(gui, DE_GUI_NODE_TEXT);
-		de_gui_text_set_text_utf8(lbl, "Video Mode");
-		de_gui_node_set_row(lbl, 0);
-		de_gui_node_set_column(lbl, 0);
 		de_gui_text_set_vertical_alignment(lbl, DE_GUI_VERTICAL_ALIGNMENT_CENTER);
-		de_gui_node_attach(lbl, grid);
-		de_gui_node_set_margin(lbl, 5, 0, 0, 0);
+		de_gui_node_apply_descriptor(lbl, &(de_gui_node_descriptor_t) {
+			.row = 0, .column = 0, .parent = grid,
+			.margin = (de_gui_thickness_t) { .left = 5 },
+			.s.text_block = (de_gui_text_block_descriptor_t) {
+				.text = "Video Mode"
+			}
+		});
 		
 		de_gui_node_t* selector = de_gui_node_create(gui, DE_GUI_NODE_SLIDE_SELECTOR);
-		de_gui_node_set_user_data(selector, page);
-		de_gui_node_set_row(selector, 0);
-		de_gui_node_set_column(selector, 1);
-		de_gui_node_attach(selector, grid);
 		de_gui_slide_selector_set_selection_changed(selector, videomode_selector_on_selection_changed);
 		page->video_modes = de_enum_video_modes();
 		de_gui_slide_selector_set_items(selector, page->video_modes.data, page->video_modes.size, videomode_selector_item_getter);
-		de_gui_node_set_margin_uniform(selector, 2);
+		de_gui_node_apply_descriptor(selector, &(de_gui_node_descriptor_t) {
+			.row = 0, .column = 1, .parent = grid, .user_data = page,
+			.margin = (de_gui_thickness_t) { .left = 5 }
+		});
 	}
 
 	/* player name */
 	{
-		de_gui_node_t* lbl = de_gui_node_create(gui, DE_GUI_NODE_TEXT);
-		de_gui_text_set_text_utf8(lbl, "Player Name");
-		de_gui_node_set_row(lbl, 1);
-		de_gui_node_set_column(lbl, 0);
+		de_gui_node_t* lbl = de_gui_node_create(gui, DE_GUI_NODE_TEXT);		
 		de_gui_text_set_vertical_alignment(lbl, DE_GUI_VERTICAL_ALIGNMENT_CENTER);
-		de_gui_node_attach(lbl, grid);
-		de_gui_node_set_margin(lbl, 5, 0, 0, 0);
+		de_gui_node_apply_descriptor(lbl, &(de_gui_node_descriptor_t) {
+			.row = 1, .column = 0, .parent = grid,
+			.margin = (de_gui_thickness_t) { .left = 5 },
+			.s.text_block = (de_gui_text_block_descriptor_t) {
+				.text = "Player Name"
+			}
+		});
 
 		de_gui_node_t* text_box = de_gui_node_create(gui, DE_GUI_NODE_TEXT_BOX);
-		de_gui_node_set_row(text_box, 1);
-		de_gui_node_set_column(text_box, 1);
-		de_gui_node_attach(text_box, grid);
-		de_gui_node_set_margin_uniform(text_box, 2);
+		de_gui_node_apply_descriptor(text_box, &(de_gui_node_descriptor_t) {
+			.row = 1, .column = 1, .parent = grid,
+			.margin = (de_gui_thickness_t) { .left = 2, .top = 2, .right = 2, .bottom = 2 }			
+		});
 	}
 
 	/* sound volume */
 	{
 		de_gui_node_t* lbl = de_gui_node_create(gui, DE_GUI_NODE_TEXT);
 		de_gui_text_set_text_utf8(lbl, "Sound Volume");
-		de_gui_node_set_row(lbl, 2);
-		de_gui_node_set_column(lbl, 0);
 		de_gui_text_set_vertical_alignment(lbl, DE_GUI_VERTICAL_ALIGNMENT_CENTER);
-		de_gui_node_attach(lbl, grid);
-		de_gui_node_set_margin(lbl, 5, 0, 0, 0);
+		de_gui_node_apply_descriptor(lbl, &(de_gui_node_descriptor_t) {
+			.row = 2, .column = 0, .parent = grid,
+			.margin = (de_gui_thickness_t) { .left = 5 }			
+		});				
 
 		page->sound_volume = de_gui_node_create(gui, DE_GUI_NODE_SCROLL_BAR);
-		de_gui_node_set_row(page->sound_volume, 2);
-		de_gui_node_set_column(page->sound_volume, 1);
-		de_gui_node_attach(page->sound_volume, grid);
-		de_gui_node_set_margin_uniform(page->sound_volume, 2);
+		de_gui_scroll_bar_set_value_changed(page->sound_volume, sound_volume_changed);
+		de_gui_node_apply_descriptor(page->sound_volume, &(de_gui_node_descriptor_t) {
+			.row = 2, .column = 1, .parent = grid,
+			.margin = (de_gui_thickness_t) { .left = 2, .top = 2, .right = 2, .bottom = 2 }		
+		});		
 	}
 
 	/* music volume */
 	{
 		de_gui_node_t* lbl = de_gui_node_create(gui, DE_GUI_NODE_TEXT);
 		de_gui_text_set_text_utf8(lbl, "Music Volume");
-		de_gui_node_set_row(lbl, 3);
-		de_gui_node_set_column(lbl, 0);
 		de_gui_text_set_vertical_alignment(lbl, DE_GUI_VERTICAL_ALIGNMENT_CENTER);
-		de_gui_node_attach(lbl, grid);
-		de_gui_node_set_margin(lbl, 5, 0, 0, 0);
+		de_gui_node_apply_descriptor(lbl, &(de_gui_node_descriptor_t) {
+			.row = 3, .column = 0, .parent = grid,
+			.margin = (de_gui_thickness_t) { .left = 5 }
+		});
 
 		page->music_volume = de_gui_node_create(gui, DE_GUI_NODE_SCROLL_BAR);
-		de_gui_node_set_row(page->music_volume, 3);
-		de_gui_node_set_column(page->music_volume, 1);
-		de_gui_node_attach(page->music_volume, grid);
-		de_gui_node_set_margin_uniform(page->music_volume, 2);
+		de_gui_scroll_bar_set_value_changed(page->music_volume, music_volume_changed);
+		de_gui_node_apply_descriptor(page->music_volume, &(de_gui_node_descriptor_t) {
+			.row = 3, .column = 1, .parent = grid,
+			.margin = (de_gui_thickness_t) { .left = 2, .top = 2, .right = 2, .bottom = 2 }
+		});
 	}
 
 	de_gui_window_set_content(page->window, grid);	
@@ -304,7 +317,7 @@ bool menu_process_event(menu_t* menu, de_event_t* evt) {
 			}
 			break;
 		case DE_EVENT_TYPE_RESIZE:
-			de_gui_node_set_desired_size(menu->root, evt->s.resize.w, evt->s.resize.h);
+			de_gui_node_set_desired_size(menu->root, (float)evt->s.resize.w, (float)evt->s.resize.h);
 			break;
 		default:
 			break;
