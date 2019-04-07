@@ -5,15 +5,15 @@
 ## Linux_Debug
 ProjectName            :=test
 ConfigurationName      :=Linux_Debug
-WorkspacePath          :=/home/dmitry/DmitrysEngine/tests/codeliteproj
-ProjectPath            :=/home/dmitry/DmitrysEngine/tests/codeliteproj
+WorkspacePath          :=/home/dmitry/Shooter/codeliteproj
+ProjectPath            :=/home/dmitry/Shooter/codeliteproj
 IntermediateDirectory  :=./Debug
 OutDir                 := $(IntermediateDirectory)
 CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=dmitry
-Date                   :=10/03/19
+Date                   :=07/04/19
 CodeLitePath           :=/home/dmitry/.codelite
 LinkerName             :=/usr/bin/g++
 SharedObjectLinkerName :=/usr/bin/g++ -shared -fPIC
@@ -36,7 +36,7 @@ ObjectsFileList        :="test.txt"
 PCHCompileFlags        :=
 MakeDirCommand         :=mkdir -p
 LinkOptions            :=  
-IncludePath            :=  $(IncludeSwitch). $(IncludeSwitch). $(IncludeSwitch)../../. $(IncludeSwitch)../../external/ 
+IncludePath            :=  $(IncludeSwitch). $(IncludeSwitch). $(IncludeSwitch)../../DmitrysEngine/ $(IncludeSwitch)../../DmitrysEngine/external/ 
 IncludePCH             := 
 RcIncludePath          := 
 Libs                   := $(LibrarySwitch)GL $(LibrarySwitch)pthread $(LibrarySwitch)asound $(LibrarySwitch)X11 $(LibrarySwitch)Xrandr 
@@ -60,7 +60,7 @@ AS       := /usr/bin/as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects0=$(IntermediateDirectory)/up_up_de_main.c$(ObjectSuffix) $(IntermediateDirectory)/up_src_main.c$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/up_up_DmitrysEngine_de_main.c$(ObjectSuffix) $(IntermediateDirectory)/up_src_game.c$(ObjectSuffix) 
 
 
 
@@ -91,21 +91,21 @@ PreBuild:
 ##
 ## Objects
 ##
-$(IntermediateDirectory)/up_up_de_main.c$(ObjectSuffix): ../../de_main.c $(IntermediateDirectory)/up_up_de_main.c$(DependSuffix)
-	$(CC) $(SourceSwitch) "/home/dmitry/DmitrysEngine/de_main.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/up_up_de_main.c$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/up_up_de_main.c$(DependSuffix): ../../de_main.c
-	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/up_up_de_main.c$(ObjectSuffix) -MF$(IntermediateDirectory)/up_up_de_main.c$(DependSuffix) -MM ../../de_main.c
+$(IntermediateDirectory)/up_up_DmitrysEngine_de_main.c$(ObjectSuffix): ../../DmitrysEngine/de_main.c $(IntermediateDirectory)/up_up_DmitrysEngine_de_main.c$(DependSuffix)
+	$(CC) $(SourceSwitch) "/home/dmitry/DmitrysEngine/de_main.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/up_up_DmitrysEngine_de_main.c$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/up_up_DmitrysEngine_de_main.c$(DependSuffix): ../../DmitrysEngine/de_main.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/up_up_DmitrysEngine_de_main.c$(ObjectSuffix) -MF$(IntermediateDirectory)/up_up_DmitrysEngine_de_main.c$(DependSuffix) -MM ../../DmitrysEngine/de_main.c
 
-$(IntermediateDirectory)/up_up_de_main.c$(PreprocessSuffix): ../../de_main.c
-	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/up_up_de_main.c$(PreprocessSuffix) ../../de_main.c
+$(IntermediateDirectory)/up_up_DmitrysEngine_de_main.c$(PreprocessSuffix): ../../DmitrysEngine/de_main.c
+	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/up_up_DmitrysEngine_de_main.c$(PreprocessSuffix) ../../DmitrysEngine/de_main.c
 
-$(IntermediateDirectory)/up_src_main.c$(ObjectSuffix): ../src/main.c $(IntermediateDirectory)/up_src_main.c$(DependSuffix)
-	$(CC) $(SourceSwitch) "/home/dmitry/DmitrysEngine/tests/src/main.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/up_src_main.c$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/up_src_main.c$(DependSuffix): ../src/main.c
-	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/up_src_main.c$(ObjectSuffix) -MF$(IntermediateDirectory)/up_src_main.c$(DependSuffix) -MM ../src/main.c
+$(IntermediateDirectory)/up_src_game.c$(ObjectSuffix): ../src/game.c $(IntermediateDirectory)/up_src_game.c$(DependSuffix)
+	$(CC) $(SourceSwitch) "/home/dmitry/Shooter/src/game.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/up_src_game.c$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/up_src_game.c$(DependSuffix): ../src/game.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/up_src_game.c$(ObjectSuffix) -MF$(IntermediateDirectory)/up_src_game.c$(DependSuffix) -MM ../src/game.c
 
-$(IntermediateDirectory)/up_src_main.c$(PreprocessSuffix): ../src/main.c
-	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/up_src_main.c$(PreprocessSuffix) ../src/main.c
+$(IntermediateDirectory)/up_src_game.c$(PreprocessSuffix): ../src/game.c
+	$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/up_src_game.c$(PreprocessSuffix) ../src/game.c
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)

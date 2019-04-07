@@ -279,6 +279,11 @@ menu_t* menu_create(game_t* game) {
 	de_gui_grid_add_column(menu->root, 0, DE_GUI_SIZE_MODE_STRETCH);
 	de_gui_grid_add_column(menu->root, 400, DE_GUI_SIZE_MODE_STRICT); // central column
 	de_gui_grid_add_column(menu->root, 0, DE_GUI_SIZE_MODE_STRETCH);
+    
+    de_gui_node_set_desired_size(menu->root, 
+        (float)de_core_get_window_width(game->core), 
+        (float)de_core_get_window_height(game->core)
+    );
 
 	{
 		de_path_t path;
