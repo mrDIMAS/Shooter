@@ -32,8 +32,6 @@ typedef struct settings_page_t {
 	menu_t* menu;
 	de_gui_node_t* window;
 	de_video_mode_array_t video_modes;
-	de_gui_node_t* sound_volume;
-	de_gui_node_t* music_volume;
 } settings_page_t;
 
 struct menu_t {

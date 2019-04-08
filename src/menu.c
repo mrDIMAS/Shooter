@@ -78,12 +78,17 @@ static void videomode_selector_on_selection_changed(de_gui_node_t* node, int n) 
 	de_core_set_video_mode(page->menu->game->core, &page->video_modes.data[n]);
 }
 
-static void sound_volume_changed(de_gui_node_t* node) {
+static void sound_volume_changed(de_gui_node_t* node, float old_value, float new_value) {
+	menu_t* menu = node->user_data;
+	de_sound_context_set_master_volume(de_core_get_sound_context(menu->game->core), new_value);
 	DE_UNUSED(node);
+	DE_UNUSED(old_value);
 }
 
-static void music_volume_changed(de_gui_node_t* node) {
+static void music_volume_changed(de_gui_node_t* node, float old_value, float new_value) {
 	DE_UNUSED(node);
+	DE_UNUSED(old_value);
+	DE_UNUSED(new_value);
 }
 
 static void settings_page_init(menu_t* menu, settings_page_t* page) {
@@ -98,24 +103,24 @@ static void settings_page_init(menu_t* menu, settings_page_t* page) {
 	de_gui_node_set_column(page->window, 1);
 	de_gui_node_set_row(page->window, 1);
 
-	/* content */	
-	de_gui_node_t* grid = de_gui_node_create(gui, DE_GUI_NODE_GRID);
-	de_gui_grid_add_column(grid, 140, DE_GUI_SIZE_MODE_STRICT);
-	de_gui_grid_add_column(grid, 0, DE_GUI_SIZE_MODE_STRETCH);
-	de_gui_grid_add_row(grid, 40, DE_GUI_SIZE_MODE_STRICT);
-	de_gui_grid_add_row(grid, 40, DE_GUI_SIZE_MODE_STRICT);
-	de_gui_grid_add_row(grid, 40, DE_GUI_SIZE_MODE_STRICT);
-	de_gui_grid_add_row(grid, 40, DE_GUI_SIZE_MODE_STRICT);
+	de_gui_node_t* grid = de_gui_node_create_with_desc(gui, DE_GUI_NODE_GRID, &(de_gui_node_descriptor_t) {
+		.s.grid = (de_gui_grid_descriptor_t) {
+			.rows[0] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
+			.rows[1] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
+			.rows[2] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
+			.rows[3] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
+
+			.columns[0] = { .desired_width = 140, .size_mode = DE_GUI_SIZE_MODE_STRICT },
+			.columns[1] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
+		}
+	});
 	
 	/* videomode */
 	{
-		de_gui_node_t* lbl = de_gui_node_create(gui, DE_GUI_NODE_TEXT);
-		de_gui_text_set_vertical_alignment(lbl, DE_GUI_VERTICAL_ALIGNMENT_CENTER);
-		de_gui_node_apply_descriptor(lbl, &(de_gui_node_descriptor_t) {
-			.row = 0, .column = 0, .parent = grid,
-			.margin = (de_gui_thickness_t) { .left = 5 },
-			.s.text_block = (de_gui_text_block_descriptor_t) {
-				.text = "Video Mode"
+		de_gui_node_create_with_desc(gui, DE_GUI_NODE_TEXT, &(de_gui_node_descriptor_t) {
+			.row = 0, .column = 0, .parent = grid, .margin = (de_gui_thickness_t) { .left = 5 },
+			.s.text_block = (de_gui_text_descriptor_t) {
+				.text = "Video Mode", .vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_CENTER,
 			}
 		});
 		
@@ -131,56 +136,53 @@ static void settings_page_init(menu_t* menu, settings_page_t* page) {
 
 	/* player name */
 	{
-		de_gui_node_t* lbl = de_gui_node_create(gui, DE_GUI_NODE_TEXT);		
-		de_gui_text_set_vertical_alignment(lbl, DE_GUI_VERTICAL_ALIGNMENT_CENTER);
-		de_gui_node_apply_descriptor(lbl, &(de_gui_node_descriptor_t) {
-			.row = 1, .column = 0, .parent = grid,
-			.margin = (de_gui_thickness_t) { .left = 5 },
-			.s.text_block = (de_gui_text_block_descriptor_t) {
-				.text = "Player Name"
+		de_gui_node_create_with_desc(gui, DE_GUI_NODE_TEXT, &(de_gui_node_descriptor_t) {
+			.row = 1, .column = 0, .parent = grid, .margin = (de_gui_thickness_t) { .left = 5 },
+			.s.text_block = (de_gui_text_descriptor_t) {
+				.text = "Player Name", .vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_CENTER,
 			}
 		});
 
 		de_gui_node_t* text_box = de_gui_node_create(gui, DE_GUI_NODE_TEXT_BOX);
 		de_gui_node_apply_descriptor(text_box, &(de_gui_node_descriptor_t) {
-			.row = 1, .column = 1, .parent = grid,
-			.margin = (de_gui_thickness_t) { .left = 2, .top = 2, .right = 2, .bottom = 2 }			
+			.row = 1, .column = 1, .parent = grid, 
+			.margin = de_gui_thickness_uniform(2)
 		});
 	}
 
 	/* sound volume */
 	{
-		de_gui_node_t* lbl = de_gui_node_create(gui, DE_GUI_NODE_TEXT);
-		de_gui_text_set_text_utf8(lbl, "Sound Volume");
-		de_gui_text_set_vertical_alignment(lbl, DE_GUI_VERTICAL_ALIGNMENT_CENTER);
-		de_gui_node_apply_descriptor(lbl, &(de_gui_node_descriptor_t) {
-			.row = 2, .column = 0, .parent = grid,
-			.margin = (de_gui_thickness_t) { .left = 5 }			
+		de_gui_node_create_with_desc(gui, DE_GUI_NODE_TEXT, &(de_gui_node_descriptor_t) {
+			.row = 2, .column = 0, .parent = grid, .margin = (de_gui_thickness_t) { .left = 5 },
+			.s.text_block = (de_gui_text_descriptor_t) {
+				.text = "Sound Volume", .vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_CENTER,
+			}
 		});				
 
-		page->sound_volume = de_gui_node_create(gui, DE_GUI_NODE_SCROLL_BAR);
-		de_gui_scroll_bar_set_value_changed(page->sound_volume, sound_volume_changed);
-		de_gui_node_apply_descriptor(page->sound_volume, &(de_gui_node_descriptor_t) {
-			.row = 2, .column = 1, .parent = grid,
-			.margin = (de_gui_thickness_t) { .left = 2, .top = 2, .right = 2, .bottom = 2 }		
-		});		
+		de_gui_node_create_with_desc(gui, DE_GUI_NODE_SCROLL_BAR, &(de_gui_node_descriptor_t) {
+			.row = 2, .column = 1, .parent = grid, .margin = de_gui_thickness_uniform(2),
+			.user_data = menu, .s.scroll_bar = (de_gui_scroll_bar_descriptor_t) {
+				.value_changed = sound_volume_changed,
+				.min = 0.0f, .max = 1.0f, .step = 0.05f, .value = 1.0
+			}
+		});
 	}
 
 	/* music volume */
-	{
-		de_gui_node_t* lbl = de_gui_node_create(gui, DE_GUI_NODE_TEXT);
-		de_gui_text_set_text_utf8(lbl, "Music Volume");
-		de_gui_text_set_vertical_alignment(lbl, DE_GUI_VERTICAL_ALIGNMENT_CENTER);
-		de_gui_node_apply_descriptor(lbl, &(de_gui_node_descriptor_t) {
-			.row = 3, .column = 0, .parent = grid,
-			.margin = (de_gui_thickness_t) { .left = 5 }
+	{		
+		de_gui_node_create_with_desc(gui, DE_GUI_NODE_TEXT, &(de_gui_node_descriptor_t) {
+			.row = 3, .column = 0, .parent = grid, .margin = (de_gui_thickness_t) { .left = 5 },
+			.s.text_block = (de_gui_text_descriptor_t) {
+				.text = "Music Volume", .vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_CENTER,
+			}
 		});
 
-		page->music_volume = de_gui_node_create(gui, DE_GUI_NODE_SCROLL_BAR);
-		de_gui_scroll_bar_set_value_changed(page->music_volume, music_volume_changed);
-		de_gui_node_apply_descriptor(page->music_volume, &(de_gui_node_descriptor_t) {
-			.row = 3, .column = 1, .parent = grid,
-			.margin = (de_gui_thickness_t) { .left = 2, .top = 2, .right = 2, .bottom = 2 }
+		de_gui_node_create_with_desc(gui, DE_GUI_NODE_SCROLL_BAR, &(de_gui_node_descriptor_t) {
+			.row = 3, .column = 1, .parent = grid, .margin = de_gui_thickness_uniform(2),
+			.user_data = menu, .s.scroll_bar = (de_gui_scroll_bar_descriptor_t) {
+				.value_changed = music_volume_changed,
+				.min = 0.0f, .max = 1.0f, .step = 0.05f, .value = 1.0
+			}
 		});
 	}
 
@@ -201,56 +203,62 @@ static void main_page_init(menu_t* menu, main_page_t* page) {
 	de_gui_node_set_column(page->window, 1);
 	de_gui_node_set_row(page->window, 1);
 
-	de_gui_node_t* grid = de_gui_node_create(gui, DE_GUI_NODE_GRID);
-	de_gui_node_set_desired_size(grid, 100, 100);
-	de_gui_node_set_desired_local_position(grid, 10, 10);
-	de_gui_grid_add_column(grid, 0, DE_GUI_SIZE_MODE_STRETCH);
-	de_gui_grid_add_row(grid, 0, DE_GUI_SIZE_MODE_STRETCH);
-	de_gui_grid_add_row(grid, 0, DE_GUI_SIZE_MODE_STRETCH);
-	de_gui_grid_add_row(grid, 0, DE_GUI_SIZE_MODE_STRETCH);
-	de_gui_grid_add_row(grid, 0, DE_GUI_SIZE_MODE_STRETCH);
-	de_gui_grid_add_row(grid, 0, DE_GUI_SIZE_MODE_STRETCH);
-	de_gui_grid_add_row(grid, 0, DE_GUI_SIZE_MODE_STRETCH);
+	de_gui_node_t* grid = de_gui_node_create_with_desc(gui, DE_GUI_NODE_GRID, &(de_gui_node_descriptor_t) {
+		.s.grid = (de_gui_grid_descriptor_t) {
+			.rows[0] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
+			.rows[1] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
+			.rows[2] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
+			.rows[3] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
+			.rows[4] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
+			.rows[5] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
+			.columns[0] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
+		}
+	});
 
 	/* new game */
-	de_gui_node_t* new_game = de_gui_node_create(gui, DE_GUI_NODE_BUTTON);
-	de_gui_text_set_text_utf8(de_gui_button_get_text(new_game), "New Game");
-	de_gui_node_set_row(new_game, 0);
-	de_gui_node_attach(new_game, grid);
-	de_gui_node_set_margin_uniform(new_game, 10);
-	de_gui_button_set_click(new_game, menu_on_new_game_click, menu->game);
+	de_gui_node_create_with_desc(gui, DE_GUI_NODE_BUTTON, &(de_gui_node_descriptor_t) {
+		.row = 0, .parent = grid, .margin = de_gui_thickness_uniform(10),
+		.s.button = (de_gui_button_descriptor_t) {
+			.text = "New Game", 
+			.click = (de_gui_callback_t) { .func = menu_on_new_game_click, .arg = menu->game }			
+		}
+	});
 	
 	/* save game */
-	de_gui_node_t* save = de_gui_node_create(gui, DE_GUI_NODE_BUTTON);
-	de_gui_text_set_text_utf8(de_gui_button_get_text(save), "Save Game");
-	de_gui_node_set_row(save, 1);
-	de_gui_node_attach(save, grid);
-	de_gui_node_set_margin_uniform(save, 10);
-	de_gui_button_set_click(save, menu_on_save_click, menu->game);
+	de_gui_node_create_with_desc(gui, DE_GUI_NODE_BUTTON, &(de_gui_node_descriptor_t) {
+		.row = 1, .parent = grid, .margin = de_gui_thickness_uniform(10),
+		.s.button = (de_gui_button_descriptor_t) {
+			.text = "Save Game",
+			.click = (de_gui_callback_t) { .func = menu_on_save_click, .arg = menu->game }
+		}
+	});
 
 	/* load game */
-	de_gui_node_t* load = de_gui_node_create(gui, DE_GUI_NODE_BUTTON);
-	de_gui_text_set_text_utf8(de_gui_button_get_text(load), "Load Game");
-	de_gui_node_set_row(load, 2);
-	de_gui_node_attach(load, grid);
-	de_gui_node_set_margin_uniform(load, 10);
-	de_gui_button_set_click(load, menu_on_load_click, menu->game);
+	de_gui_node_create_with_desc(gui, DE_GUI_NODE_BUTTON, &(de_gui_node_descriptor_t) {
+		.row = 2, .parent = grid, .margin = de_gui_thickness_uniform(10),
+		.s.button = (de_gui_button_descriptor_t) {
+			.text = "Load Game",
+			.click = (de_gui_callback_t) { .func = menu_on_load_click, .arg = menu->game }
+		}
+	});
 	
     /* settings */
-	de_gui_node_t* settings = de_gui_node_create(gui, DE_GUI_NODE_BUTTON);
-	de_gui_text_set_text_utf8(de_gui_button_get_text(settings), "Settings");
-	de_gui_node_set_row(settings, 3);
-	de_gui_node_attach(settings, grid);
-	de_gui_node_set_margin_uniform(settings, 10);
-	de_gui_button_set_click(settings, menu_on_settings_click, menu->game);
-	
+	de_gui_node_create_with_desc(gui, DE_GUI_NODE_BUTTON, &(de_gui_node_descriptor_t) {
+		.row = 3, .parent = grid, .margin = de_gui_thickness_uniform(10),
+		.s.button = (de_gui_button_descriptor_t) {
+			.text = "Settings",
+			.click = (de_gui_callback_t) { .func = menu_on_settings_click, .arg = menu->game }
+		}
+	});
+			
     /* quit */
-	de_gui_node_t* quit = de_gui_node_create(gui, DE_GUI_NODE_BUTTON);
-	de_gui_text_set_text_utf8(de_gui_button_get_text(quit), "Quit");
-	de_gui_node_set_row(quit, 4);
-	de_gui_node_attach(quit, grid);
-	de_gui_node_set_margin_uniform(quit, 10);
-	de_gui_button_set_click(quit, quit_on_click, menu->game);
+	de_gui_node_create_with_desc(gui, DE_GUI_NODE_BUTTON, &(de_gui_node_descriptor_t) {
+		.row = 4, .parent = grid, .margin = de_gui_thickness_uniform(10),
+		.s.button = (de_gui_button_descriptor_t) {
+			.text = "Quit",
+			.click = (de_gui_callback_t) { .func = quit_on_click, .arg = menu->game }
+		}
+	});
 	
 	de_gui_window_set_content(page->window, grid);
 }
@@ -294,7 +302,7 @@ menu_t* menu_create(game_t* game) {
 		de_sound_buffer_set_flags(buffer, DE_SOUND_BUFFER_FLAGS_STREAM);
 		menu->music = de_sound_source_create(de_core_get_sound_context(game->core), DE_SOUND_SOURCE_TYPE_2D);
 		de_sound_source_set_buffer(menu->music, de_resource_to_sound_buffer(res));
-		//de_sound_source_play(menu->music);
+		de_sound_source_play(menu->music);
 	}
 
 	main_page_init(menu, &menu->main_page);
