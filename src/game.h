@@ -27,6 +27,8 @@ typedef struct menu_t menu_t;
 typedef struct level_t level_t;
 typedef struct player_t player_t;
 typedef struct weapon_t weapon_t;
+typedef struct bot_t bot_t;
+typedef struct actor_t actor_t;
 
 struct game_t {
 	de_core_t* core;
@@ -39,7 +41,18 @@ bool game_save(game_t* game);
 
 bool game_load(game_t* game);
 
+
+typedef struct actor_dispatch_table_t {
+	void(*init)(actor_t* actor);
+	void(*deinit)(actor_t* actor);
+	void(*update)(actor_t* actor);
+	bool(*visit)(de_object_visitor_t* visitor, actor_t* actor);
+	bool(*process_event)(actor_t* actor, const de_event_t* evt);
+} actor_dispatch_table_t;
+
 #include "level.h"
 #include "weapon.h"
 #include "player.h"
 #include "menu.h"
+#include "bot.h"
+#include "actor.h"

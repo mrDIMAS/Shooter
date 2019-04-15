@@ -20,10 +20,19 @@
 * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 typedef enum weapon_type_t {
-	WEAPON_TYPE_SHOTGUN
+	WEAPON_TYPE_AK47,
+	WEAPON_TYPE_FORCE_SIZE = INT32_MAX,
 } weapon_type_t;
 
 struct weapon_t {
 	weapon_type_t type;
 	de_node_t* model;
 };
+
+weapon_t* weapon_create(level_t* level, weapon_type_t type);
+
+void weapon_free(weapon_t* wpn);
+
+void weapon_update(weapon_t* wpn);
+
+bool weapon_visit(de_object_visitor_t* visitor, weapon_t* wpn);

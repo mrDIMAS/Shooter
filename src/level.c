@@ -25,7 +25,7 @@ void level_create_collider(level_t* level) {
 		de_static_geometry_t* map_collider;
 		assert(polygon->type == DE_NODE_TYPE_MESH);
 		map_collider = de_scene_create_static_geometry(level->scene);
-		de_node_calculate_transforms(polygon);
+		de_node_calculate_transforms_ascending(polygon);
 		de_static_geometry_fill(map_collider, de_node_to_mesh(polygon), polygon->global_matrix);
 	}
 }
@@ -36,7 +36,7 @@ bool level_visit(de_object_visitor_t* visitor, level_t* level) {
 		level->game = de_core_get_user_pointer(visitor->core);
 	}
 	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "Scene", &level->scene, de_scene_visit);
-	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "Player", &level->player, player_visit);
+	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "Player", &level->player, actor_visit);
 	if (visitor->is_reading) {
 		level_create_collider(level);
 	}
@@ -81,23 +81,23 @@ level_t* level_create_test(game_t* game) {
 
 	level_create_collider(level);
 
-	level->player = player_create(level);
+	level->player = actor_create(level, ACTOR_TYPE_PLAYER);
 	de_node_t* pp = de_scene_find_node(level->scene, "PlayerPosition");
 	if (pp) {
 		de_vec3_t pos;
 		de_node_get_global_position(pp, &pos);
-		de_node_set_local_position(level->player->pivot, &pos);
+		actor_set_position(level->player, &pos);		
 	}
 
 	return level;
 }
 
 void level_update(level_t* level) {
-	player_update(level->player);
+	actor_update(level->player);
 }
 
 void level_free(level_t* level) {
-	player_free(level->player);
+	actor_free(level->player);
 	de_scene_free(level->scene);
 	de_free(level);
 }

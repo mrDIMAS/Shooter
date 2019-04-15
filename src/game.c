@@ -26,6 +26,8 @@
 #include "level.c"
 #include "player.c"
 #include "menu.c"
+#include "bot.c"
+#include "actor.c"
 
 bool game_save(game_t* game) {
 	bool result = false;
@@ -59,19 +61,18 @@ bool game_load(game_t* game) {
 }
 
 static game_t* game_create(void) {
-	game_t* game;
-	de_engine_params_t params;
-
-	game = DE_NEW(game_t);
+	game_t* game = DE_NEW(game_t);
 	de_log_open("dengine.log");
 
 	/* Init core */
-	de_zero(&params, sizeof(params));
-	params.video_mode.width = 1200;
-	params.video_mode.height = 1000;
-	params.video_mode.bits_per_pixel = 32;
-	params.video_mode.fullscreen = false;
-	game->core = de_core_init(&params);
+	game->core = de_core_init(&(de_engine_params_t) {
+		.video_mode = (de_video_mode_t) {
+			.width = 1200,
+			.height = 1000,
+			.bits_per_pixel = 32,
+			.fullscreen = false
+		}
+	});
 	de_core_set_user_pointer(game->core, game);
 	de_renderer_set_framerate_limit(de_core_get_renderer(game->core), 0);
 

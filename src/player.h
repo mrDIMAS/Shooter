@@ -26,11 +26,8 @@ typedef struct player_controller_t {
 } player_controller_t;
 
 struct player_t {
-	level_t* parent_level;
-	de_node_t* pivot;
 	de_node_t* camera;
 	de_node_t* flash_light;
-	de_body_t* body;
 	de_node_t* weapon_pivot;
 	float pitch;
 	float desired_pitch;
@@ -52,14 +49,4 @@ struct player_t {
 	DE_ARRAY_DECLARE(de_sound_source_t*, footsteps);
 };
 
-
-
-bool player_process_event(player_t* p, const de_event_t* evt);
-
-player_t* player_create(level_t* level);
-
-bool player_visit(de_object_visitor_t* visitor, player_t* player);
-
-void player_free(player_t* p);
-
-void player_update(player_t* p);
+actor_dispatch_table_t* player_get_dispatch_table();

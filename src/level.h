@@ -22,7 +22,7 @@
 struct level_t {
 	game_t* game;
 	de_scene_t* scene;
-	player_t* player;
+	actor_t* player;
 };
 
 void level_create_collider(level_t* level);
