@@ -21,6 +21,7 @@
 
 typedef enum weapon_type_t {
 	WEAPON_TYPE_AK47,
+	WEAPON_TYPE_M4,
 	WEAPON_TYPE_FORCE_SIZE = INT32_MAX,
 } weapon_type_t;
 

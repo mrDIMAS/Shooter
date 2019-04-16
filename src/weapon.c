@@ -21,18 +21,24 @@
 
 weapon_t* weapon_create(level_t* level, weapon_type_t type) {
 	weapon_t* wpn = DE_NEW(weapon_t);
-
 	wpn->type = type;
 
-	if (type == WEAPON_TYPE_AK47) {
-		de_path_t path;
-		de_path_from_cstr_as_view(&path, "data/models/ak47/ak47.fbx");
-		de_resource_t* model_resource = de_core_request_resource(level->game->core, DE_RESOURCE_TYPE_MODEL, &path, 0);
-		DE_ASSERT(de_resource_get_type(model_resource) == DE_RESOURCE_TYPE_MODEL);
-		wpn->model = de_model_instantiate(de_resource_to_model(model_resource), level->scene);
-	} else {
-		de_log("invalid weapon type");
+	de_path_t path;
+	switch (type) {
+		case WEAPON_TYPE_AK47: 
+			de_path_from_cstr_as_view(&path, "data/models/ak47/ak47.fbx");
+			break;		
+		case WEAPON_TYPE_M4: 
+			de_path_from_cstr_as_view(&path, "data/models/m4/m4.fbx");
+			break;		
+		default:
+			de_log("invalid weapon type");
+			de_free(wpn);
+			return NULL;		
 	}
+
+	de_resource_t* model_resource = de_core_request_resource(level->game->core, DE_RESOURCE_TYPE_MODEL, &path, 0);
+	wpn->model = de_model_instantiate(de_resource_to_model(model_resource), level->scene);
 
 	return wpn;
 }

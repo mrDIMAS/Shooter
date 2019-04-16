@@ -134,7 +134,7 @@ static void player_init(actor_t* actor) {
 	p->weapon_pivot = de_node_create(scene, DE_NODE_TYPE_BASE);
 	de_scene_add_node(scene, p->weapon_pivot);
 	de_node_attach(p->weapon_pivot, p->camera);
-	de_node_set_local_position(p->weapon_pivot, &(de_vec3_t) { 0.03f, -0.052f, -0.02f });
+	de_node_set_local_position(p->weapon_pivot, &(de_vec3_t) { 0.065f, -0.052f, -0.02f });
 
 	de_sound_context_t* ctx = de_core_get_sound_context(core);
 
@@ -150,7 +150,7 @@ static void player_init(actor_t* actor) {
 	}
 	
 #if 1
-	weapon_t* shotgun = weapon_create(level, WEAPON_TYPE_AK47);
+	weapon_t* shotgun = weapon_create(level, WEAPON_TYPE_M4);
 	de_node_attach(shotgun->model, p->weapon_pivot);
 	DE_ARRAY_APPEND(p->weapons, shotgun);
 #endif
