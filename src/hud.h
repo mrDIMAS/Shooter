@@ -19,23 +19,15 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-typedef enum weapon_type_t {
-	WEAPON_TYPE_AK47,
-	WEAPON_TYPE_M4,
-	WEAPON_TYPE_FORCE_SIZE = INT32_MAX,
-} weapon_type_t;
-
-struct weapon_t {
-	weapon_type_t type;
-	de_node_t* model;
+struct hud_t {
+	game_t* game;
+	de_gui_node_t* root;
 };
 
-weapon_t* weapon_create(level_t* level, weapon_type_t type);
+hud_t* hud_create(game_t* game);
 
-void weapon_free(weapon_t* wpn);
+void hud_free(hud_t* hud);
 
-void weapon_update(weapon_t* wpn);
+void hud_set_visible(hud_t* hud);
 
-bool weapon_visit(de_object_visitor_t* visitor, weapon_t* wpn);
-
-void weapon_set_visible(weapon_t* wpn, bool state);
+bool hud_process_event(hud_t* hud, de_event_t* evt);

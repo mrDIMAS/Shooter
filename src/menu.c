@@ -19,18 +19,21 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-static void quit_on_click(de_gui_node_t* node, void* user_data) {
+static void quit_on_click(de_gui_node_t* node, void* user_data)
+{
 	game_t* game = (game_t*)user_data;
 	DE_UNUSED(node);
 	de_core_stop(game->core);
 }
 
-void menu_set_visible(menu_t* menu, bool visibility) {	
+void menu_set_visible(menu_t* menu, bool visibility)
+{
 	de_gui_node_set_visibility(menu->main_page.window, visibility ? DE_GUI_NODE_VISIBILITY_VISIBLE : DE_GUI_NODE_VISIBILITY_COLLAPSED);
 	menu->visible = visibility;
 }
 
-static void menu_on_new_game_click(de_gui_node_t* node, void* user_data) {
+static void menu_on_new_game_click(de_gui_node_t* node, void* user_data)
+{
 	game_t* game = (game_t*)user_data;
 
 	DE_UNUSED(node);
@@ -42,56 +45,62 @@ static void menu_on_new_game_click(de_gui_node_t* node, void* user_data) {
 	menu_set_visible(game->main_menu, false);
 }
 
-static void menu_set_page(menu_t* menu, menu_page_type_t page) {
+static void menu_set_page(menu_t* menu, menu_page_type_t page)
+{
 	menu->page = page;
 
 	de_gui_node_set_visibility(menu->settings_page.window, menu->page == MENU_PAGE_TYPE_SETTINGS ? DE_GUI_NODE_VISIBILITY_VISIBLE : DE_GUI_NODE_VISIBILITY_COLLAPSED);
 	de_gui_node_set_visibility(menu->main_page.window, menu->page == MENU_PAGE_TYPE_MAIN ? DE_GUI_NODE_VISIBILITY_VISIBLE : DE_GUI_NODE_VISIBILITY_COLLAPSED);
 }
 
-static void menu_on_save_click(de_gui_node_t* node, void* user_data) {
+static void menu_on_save_click(de_gui_node_t* node, void* user_data)
+{
 	game_t* game = (game_t*)user_data;
 	DE_UNUSED(node);
 	game_save(game);
 }
 
-static void menu_on_load_click(de_gui_node_t* node, void* user_data) {
+static void menu_on_load_click(de_gui_node_t* node, void* user_data)
+{
 	game_t* game = (game_t*)user_data;
 	DE_UNUSED(node);
 	game_load(game);
 }
 
-static void menu_on_settings_click(de_gui_node_t* node, void* user_data) {
+static void menu_on_settings_click(de_gui_node_t* node, void* user_data)
+{
 	game_t* game = (game_t*)user_data;
 	DE_UNUSED(node);
 	menu_set_page(game->main_menu, MENU_PAGE_TYPE_SETTINGS);
 }
 
-static void videomode_selector_item_getter(void* items, int n, char* out_buffer, int out_buffer_size) {
+static void videomode_selector_item_getter(void* items, int n, char* out_buffer, int out_buffer_size)
+{
 	de_video_mode_t* videomode = ((de_video_mode_t*)items) + n;
 	snprintf(out_buffer, out_buffer_size, "%dx%d@%d", videomode->width, videomode->height, videomode->bits_per_pixel);
 }
 
-static void videomode_selector_on_selection_changed(de_gui_node_t* node, int n) {
+static void videomode_selector_on_selection_changed(de_gui_node_t* node, int n)
+{
 	DE_ASSERT_GUI_NODE_TYPE(node, DE_GUI_NODE_SLIDE_SELECTOR);
 	settings_page_t* page = (settings_page_t*)node->user_data;
 	de_core_set_video_mode(page->menu->game->core, &page->video_modes.data[n]);
 }
 
-static void sound_volume_changed(de_gui_node_t* node, float old_value, float new_value) {
+static void sound_volume_changed(de_gui_node_t* node, float old_value, float new_value)
+{
 	menu_t* menu = node->user_data;
 	de_sound_context_set_master_volume(de_core_get_sound_context(menu->game->core), new_value);
-	DE_UNUSED(node);
-	DE_UNUSED(old_value);
+	DE_UNUSED(node, old_value);
 }
 
-static void music_volume_changed(de_gui_node_t* node, float old_value, float new_value) {
-	DE_UNUSED(node);
-	DE_UNUSED(old_value);
-	DE_UNUSED(new_value);
+static void music_volume_changed(de_gui_node_t* node, float old_value, float new_value)
+{
+	DE_UNUSED(node, old_value, new_value);
 }
 
-static void settings_page_init(menu_t* menu, settings_page_t* page) {
+static void settings_page_init(menu_t* menu, settings_page_t* page)
+{
 	de_gui_t* gui = de_core_get_gui(menu->game->core);
 
 	page->menu = menu;
@@ -104,33 +113,38 @@ static void settings_page_init(menu_t* menu, settings_page_t* page) {
 	de_gui_node_set_row(page->window, 1);
 
 	de_gui_node_t* grid = de_gui_node_create_with_desc(gui, DE_GUI_NODE_GRID, &(de_gui_node_descriptor_t) {
-		.s.grid = (de_gui_grid_descriptor_t) {
+		.s.grid = (de_gui_grid_descriptor_t)
+		{
 			.rows[0] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
-			.rows[1] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
-			.rows[2] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
-			.rows[3] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
+				.rows[1] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
+				.rows[2] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
+				.rows[3] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
 
-			.columns[0] = { .desired_width = 140, .size_mode = DE_GUI_SIZE_MODE_STRICT },
-			.columns[1] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
+				.columns[0] = { .desired_width = 140, .size_mode = DE_GUI_SIZE_MODE_STRICT },
+				.columns[1] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
 		}
 	});
-	
+
 	/* videomode */
 	{
 		de_gui_node_create_with_desc(gui, DE_GUI_NODE_TEXT, &(de_gui_node_descriptor_t) {
 			.row = 0, .column = 0, .parent = grid, .margin = (de_gui_thickness_t) { .left = 5 },
-			.s.text_block = (de_gui_text_descriptor_t) {
+				.s.text_block = (de_gui_text_descriptor_t)
+			{
 				.text = "Video Mode", .vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_CENTER,
 			}
 		});
-		
+
 		de_gui_node_t* selector = de_gui_node_create(gui, DE_GUI_NODE_SLIDE_SELECTOR);
 		de_gui_slide_selector_set_selection_changed(selector, videomode_selector_on_selection_changed);
 		page->video_modes = de_enum_video_modes();
 		de_gui_slide_selector_set_items(selector, page->video_modes.data, page->video_modes.size, videomode_selector_item_getter);
+		char buf[512];
+		snprintf(buf, sizeof(buf), "%dx%d", de_core_get_window_width(menu->game->core), de_core_get_window_height(menu->game->core));
+		de_gui_slide_selector_override_selection_text(selector, buf);
 		de_gui_node_apply_descriptor(selector, &(de_gui_node_descriptor_t) {
 			.row = 0, .column = 1, .parent = grid, .user_data = page,
-			.margin = (de_gui_thickness_t) { .left = 5 }
+				.margin = (de_gui_thickness_t) { .left = 5 }
 		});
 	}
 
@@ -138,15 +152,16 @@ static void settings_page_init(menu_t* menu, settings_page_t* page) {
 	{
 		de_gui_node_create_with_desc(gui, DE_GUI_NODE_TEXT, &(de_gui_node_descriptor_t) {
 			.row = 1, .column = 0, .parent = grid, .margin = (de_gui_thickness_t) { .left = 5 },
-			.s.text_block = (de_gui_text_descriptor_t) {
+				.s.text_block = (de_gui_text_descriptor_t)
+			{
 				.text = "Player Name", .vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_CENTER,
 			}
 		});
 
 		de_gui_node_t* text_box = de_gui_node_create(gui, DE_GUI_NODE_TEXT_BOX);
 		de_gui_node_apply_descriptor(text_box, &(de_gui_node_descriptor_t) {
-			.row = 1, .column = 1, .parent = grid, 
-			.margin = de_gui_thickness_uniform(2)
+			.row = 1, .column = 1, .parent = grid,
+				.margin = de_gui_thickness_uniform(2)
 		});
 	}
 
@@ -154,46 +169,52 @@ static void settings_page_init(menu_t* menu, settings_page_t* page) {
 	{
 		de_gui_node_create_with_desc(gui, DE_GUI_NODE_TEXT, &(de_gui_node_descriptor_t) {
 			.row = 2, .column = 0, .parent = grid, .margin = (de_gui_thickness_t) { .left = 5 },
-			.s.text_block = (de_gui_text_descriptor_t) {
+				.s.text_block = (de_gui_text_descriptor_t)
+			{
 				.text = "Sound Volume", .vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_CENTER,
 			}
-		});				
+		});
 
 		de_gui_node_create_with_desc(gui, DE_GUI_NODE_SCROLL_BAR, &(de_gui_node_descriptor_t) {
 			.row = 2, .column = 1, .parent = grid, .margin = de_gui_thickness_uniform(2),
-			.user_data = menu, .s.scroll_bar = (de_gui_scroll_bar_descriptor_t) {
+				.user_data = menu, .s.scroll_bar = (de_gui_scroll_bar_descriptor_t)
+			{
 				.value_changed = sound_volume_changed,
-				.min = 0.0f, .max = 1.0f, .step = 0.05f, .value = 1.0
+					.min = 0.0f, .max = 1.0f, .step = 0.05f, .value = 1.0
 			}
 		});
 	}
 
 	/* music volume */
-	{		
+	{
 		de_gui_node_create_with_desc(gui, DE_GUI_NODE_TEXT, &(de_gui_node_descriptor_t) {
 			.row = 3, .column = 0, .parent = grid, .margin = (de_gui_thickness_t) { .left = 5 },
-			.s.text_block = (de_gui_text_descriptor_t) {
+				.s.text_block = (de_gui_text_descriptor_t)
+			{
 				.text = "Music Volume", .vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_CENTER,
 			}
 		});
 
 		de_gui_node_create_with_desc(gui, DE_GUI_NODE_SCROLL_BAR, &(de_gui_node_descriptor_t) {
 			.row = 3, .column = 1, .parent = grid, .margin = de_gui_thickness_uniform(2),
-			.user_data = menu, .s.scroll_bar = (de_gui_scroll_bar_descriptor_t) {
+				.user_data = menu, .s.scroll_bar = (de_gui_scroll_bar_descriptor_t)
+			{
 				.value_changed = music_volume_changed,
-				.min = 0.0f, .max = 1.0f, .step = 0.05f, .value = 1.0
+					.min = 0.0f, .max = 1.0f, .step = 0.05f, .value = 1.0
 			}
 		});
 	}
 
-	de_gui_window_set_content(page->window, grid);	
+	de_gui_window_set_content(page->window, grid);
 }
 
-static void settings_page_deinit(settings_page_t* page) {
+static void settings_page_deinit(settings_page_t* page)
+{
 	DE_ARRAY_FREE(page->video_modes);
 }
 
-static void main_page_init(menu_t* menu, main_page_t* page) {
+static void main_page_init(menu_t* menu, main_page_t* page)
+{
 	de_gui_t* gui = de_core_get_gui(menu->game->core);
 
 	page->window = de_gui_node_create(gui, DE_GUI_NODE_WINDOW);
@@ -204,66 +225,73 @@ static void main_page_init(menu_t* menu, main_page_t* page) {
 	de_gui_node_set_row(page->window, 1);
 
 	de_gui_node_t* grid = de_gui_node_create_with_desc(gui, DE_GUI_NODE_GRID, &(de_gui_node_descriptor_t) {
-		.s.grid = (de_gui_grid_descriptor_t) {
+		.s.grid = (de_gui_grid_descriptor_t)
+		{
 			.rows[0] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
-			.rows[1] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
-			.rows[2] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
-			.rows[3] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
-			.rows[4] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
-			.rows[5] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
-			.columns[0] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
+				.rows[1] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
+				.rows[2] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
+				.rows[3] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
+				.rows[4] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
+				.rows[5] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
+				.columns[0] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
 		}
 	});
 
 	/* new game */
 	de_gui_node_create_with_desc(gui, DE_GUI_NODE_BUTTON, &(de_gui_node_descriptor_t) {
 		.row = 0, .parent = grid, .margin = de_gui_thickness_uniform(10),
-		.s.button = (de_gui_button_descriptor_t) {
-			.text = "New Game", 
-			.click = (de_gui_callback_t) { .func = menu_on_new_game_click, .arg = menu->game }			
+			.s.button = (de_gui_button_descriptor_t)
+		{
+			.text = "New Game",
+				.click = (de_gui_callback_t) { .func = menu_on_new_game_click, .arg = menu->game }
 		}
 	});
-	
+
 	/* save game */
 	de_gui_node_create_with_desc(gui, DE_GUI_NODE_BUTTON, &(de_gui_node_descriptor_t) {
 		.row = 1, .parent = grid, .margin = de_gui_thickness_uniform(10),
-		.s.button = (de_gui_button_descriptor_t) {
+			.s.button = (de_gui_button_descriptor_t)
+		{
 			.text = "Save Game",
-			.click = (de_gui_callback_t) { .func = menu_on_save_click, .arg = menu->game }
+				.click = (de_gui_callback_t) { .func = menu_on_save_click, .arg = menu->game }
 		}
 	});
 
 	/* load game */
 	de_gui_node_create_with_desc(gui, DE_GUI_NODE_BUTTON, &(de_gui_node_descriptor_t) {
 		.row = 2, .parent = grid, .margin = de_gui_thickness_uniform(10),
-		.s.button = (de_gui_button_descriptor_t) {
+			.s.button = (de_gui_button_descriptor_t)
+		{
 			.text = "Load Game",
-			.click = (de_gui_callback_t) { .func = menu_on_load_click, .arg = menu->game }
+				.click = (de_gui_callback_t) { .func = menu_on_load_click, .arg = menu->game }
 		}
 	});
-	
-    /* settings */
+
+	/* settings */
 	de_gui_node_create_with_desc(gui, DE_GUI_NODE_BUTTON, &(de_gui_node_descriptor_t) {
 		.row = 3, .parent = grid, .margin = de_gui_thickness_uniform(10),
-		.s.button = (de_gui_button_descriptor_t) {
+			.s.button = (de_gui_button_descriptor_t)
+		{
 			.text = "Settings",
-			.click = (de_gui_callback_t) { .func = menu_on_settings_click, .arg = menu->game }
+				.click = (de_gui_callback_t) { .func = menu_on_settings_click, .arg = menu->game }
 		}
 	});
-			
-    /* quit */
+
+	/* quit */
 	de_gui_node_create_with_desc(gui, DE_GUI_NODE_BUTTON, &(de_gui_node_descriptor_t) {
 		.row = 4, .parent = grid, .margin = de_gui_thickness_uniform(10),
-		.s.button = (de_gui_button_descriptor_t) {
+			.s.button = (de_gui_button_descriptor_t)
+		{
 			.text = "Quit",
-			.click = (de_gui_callback_t) { .func = quit_on_click, .arg = menu->game }
+				.click = (de_gui_callback_t) { .func = quit_on_click, .arg = menu->game }
 		}
 	});
-	
+
 	de_gui_window_set_content(page->window, grid);
 }
 
-menu_t* menu_create(game_t* game) {
+menu_t* menu_create(game_t* game)
+{
 	de_gui_t* gui = de_core_get_gui(game->core);
 	menu_t* menu = DE_NEW(menu_t);
 	menu->game = game;
@@ -287,11 +315,11 @@ menu_t* menu_create(game_t* game) {
 	de_gui_grid_add_column(menu->root, 0, DE_GUI_SIZE_MODE_STRETCH);
 	de_gui_grid_add_column(menu->root, 400, DE_GUI_SIZE_MODE_STRICT); // central column
 	de_gui_grid_add_column(menu->root, 0, DE_GUI_SIZE_MODE_STRETCH);
-    
-    de_gui_node_set_desired_size(menu->root, 
-        (float)de_core_get_window_width(game->core), 
-        (float)de_core_get_window_height(game->core)
-    );
+
+	de_gui_node_set_desired_size(menu->root,
+		(float)de_core_get_window_width(game->core),
+		(float)de_core_get_window_height(game->core)
+	);
 
 	{
 		de_path_t path;
@@ -313,7 +341,8 @@ menu_t* menu_create(game_t* game) {
 	return menu;
 }
 
-bool menu_process_event(menu_t* menu, de_event_t* evt) {
+bool menu_process_event(menu_t* menu, de_event_t* evt)
+{
 	switch (evt->type) {
 		case DE_EVENT_TYPE_KEY_DOWN:
 			if (evt->s.key.key == DE_KEY_ESC) {
@@ -338,7 +367,8 @@ bool menu_process_event(menu_t* menu, de_event_t* evt) {
 	return false;
 }
 
-void menu_free(menu_t* menu) {
+void menu_free(menu_t* menu)
+{
 	settings_page_deinit(&menu->settings_page);
 	de_sound_source_free(menu->music);
 	de_free(menu);

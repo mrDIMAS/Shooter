@@ -29,11 +29,13 @@ typedef struct player_t player_t;
 typedef struct weapon_t weapon_t;
 typedef struct bot_t bot_t;
 typedef struct actor_t actor_t;
+typedef struct hud_t hud_t;
 
 struct game_t {
 	de_core_t* core;
 	level_t* level;
 	menu_t* main_menu;
+	hud_t* hud;
 	de_gui_node_t* fps_text;
 };
 
@@ -56,3 +58,4 @@ typedef struct actor_dispatch_table_t {
 #include "menu.h"
 #include "bot.h"
 #include "actor.h"
+#include "hud.h"

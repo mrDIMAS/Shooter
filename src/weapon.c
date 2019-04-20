@@ -19,40 +19,51 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-weapon_t* weapon_create(level_t* level, weapon_type_t type) {
+weapon_t* weapon_create(level_t* level, weapon_type_t type)
+{
 	weapon_t* wpn = DE_NEW(weapon_t);
 	wpn->type = type;
 
 	de_path_t path;
 	switch (type) {
-		case WEAPON_TYPE_AK47: 
+		case WEAPON_TYPE_AK47:
 			de_path_from_cstr_as_view(&path, "data/models/ak47/ak47.fbx");
-			break;		
-		case WEAPON_TYPE_M4: 
+			break;
+		case WEAPON_TYPE_M4:
 			de_path_from_cstr_as_view(&path, "data/models/m4/m4.fbx");
-			break;		
+			break;
 		default:
 			de_log("invalid weapon type");
 			de_free(wpn);
-			return NULL;		
+			return NULL;
 	}
 
 	de_resource_t* model_resource = de_core_request_resource(level->game->core, DE_RESOURCE_TYPE_MODEL, &path, 0);
 	wpn->model = de_model_instantiate(de_resource_to_model(model_resource), level->scene);
-
+	/* make sure weapon will not penetrate into walls (in most cases it will be rendered above all 
+	 * other geometry) */
+	de_node_set_depth_hack(wpn->model, 0.1f);
 	return wpn;
 }
 
-void weapon_free(weapon_t* wpn) {
+void weapon_set_visible(weapon_t* wpn, bool state)
+{
+	de_node_set_local_visibility(wpn->model, state);
+}
+
+void weapon_free(weapon_t* wpn)
+{
 	de_node_free(wpn->model);
 	de_free(wpn);
 }
 
-void weapon_update(weapon_t* wpn) {
+void weapon_update(weapon_t* wpn)
+{
 	DE_UNUSED(wpn);
 }
 
-bool weapon_visit(de_object_visitor_t* visitor, weapon_t* wpn) {
+bool weapon_visit(de_object_visitor_t* visitor, weapon_t* wpn)
+{
 	bool result = true;
 	result &= de_object_visitor_visit_int32(visitor, "Type", (int32_t*)&wpn->type);
 	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "Model", &wpn->model, de_node_visit);

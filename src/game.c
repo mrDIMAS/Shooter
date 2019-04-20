@@ -28,8 +28,10 @@
 #include "menu.c"
 #include "bot.c"
 #include "actor.c"
+#include "hud.c"
 
-bool game_save(game_t* game) {
+bool game_save(game_t* game)
+{
 	bool result = false;
 	if (game->level) {
 		result = true;
@@ -49,7 +51,8 @@ bool game_save(game_t* game) {
 	return result;
 }
 
-bool game_load(game_t* game) {
+bool game_load(game_t* game)
+{
 	de_object_visitor_t visitor;
 	bool result = true;
 	de_object_visitor_load_binary(game->core, &visitor, "save1.bin");
@@ -60,17 +63,20 @@ bool game_load(game_t* game) {
 	return result;
 }
 
-static game_t* game_create(void) {
+static game_t* game_create(void)
+{
 	game_t* game = DE_NEW(game_t);
 	de_log_open("dengine.log");
 
 	/* Init core */
-	game->core = de_core_init(&(de_engine_params_t) {
-		.video_mode = (de_video_mode_t) {
+	game->core = de_core_init(&(de_engine_params_t)
+	{
+		.video_mode = (de_video_mode_t)
+		{
 			.width = 1200,
-			.height = 1000,
-			.bits_per_pixel = 32,
-			.fullscreen = false
+				.height = 1000,
+				.bits_per_pixel = 32,
+				.fullscreen = false
 		}
 	});
 	de_core_set_user_pointer(game->core, game);
@@ -79,13 +85,16 @@ static game_t* game_create(void) {
 	/* Create menu */
 	game->main_menu = menu_create(game);
 
+	game->hud = hud_create(game);
+
 	/* Create overlay */
 	game->fps_text = de_gui_node_create(de_core_get_gui(game->core), DE_GUI_NODE_TEXT);
 
 	return game;
 }
 
-static void game_main_loop(game_t* game) {
+static void game_main_loop(game_t* game)
+{
 	double game_clock, fixed_fps, fixed_timestep, dt;
 	de_event_t evt;
 	de_renderer_t* renderer;
@@ -108,8 +117,11 @@ static void game_main_loop(game_t* game) {
 			dt -= fixed_timestep;
 			game_clock += fixed_timestep;
 
-			while (de_core_poll_event(game->core, &evt)) {				
+			while (de_core_poll_event(game->core, &evt)) {
 				bool processed = menu_process_event(game->main_menu, &evt);
+				if (!processed) {
+					processed = hud_process_event(game->hud, &evt);
+				}
 				if (!processed) {
 					processed = de_gui_process_event(gui, &evt);
 				}
@@ -121,7 +133,8 @@ static void game_main_loop(game_t* game) {
 			de_sound_context_update(de_core_get_sound_context(game->core));
 			de_gui_update(gui);
 			de_physics_step(game->core, fixed_timestep);
-			DE_LINKED_LIST_FOR_EACH_H(de_scene_t*, scene, de_core_get_first_scene(game->core)) {
+			DE_LINKED_LIST_FOR_EACH_H(de_scene_t*, scene, de_core_get_first_scene(game->core))
+			{
 				de_scene_update(scene, fixed_timestep);
 			}
 
@@ -150,10 +163,13 @@ static void game_main_loop(game_t* game) {
 	}
 }
 
-static void game_close(game_t* game) {
+static void game_close(game_t* game)
+{
 	if (game->level) {
 		level_free(game->level);
 	}
+
+	hud_free(game->hud);
 
 	menu_free(game->main_menu);
 
@@ -162,7 +178,8 @@ static void game_close(game_t* game) {
 	de_free(game);
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
 	game_t* game;
 
 	DE_UNUSED(argc);

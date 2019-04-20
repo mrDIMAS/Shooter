@@ -19,7 +19,8 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-static actor_dispatch_table_t* actor_get_dispatch_table_by_type(actor_type_t type) {
+static actor_dispatch_table_t* actor_get_dispatch_table_by_type(actor_type_t type)
+{
 	static actor_dispatch_table_t stub;
 	switch (type) {
 		case ACTOR_TYPE_BOT:
@@ -32,7 +33,8 @@ static actor_dispatch_table_t* actor_get_dispatch_table_by_type(actor_type_t typ
 	return NULL;
 }
 
-actor_t* actor_create(level_t* level, actor_type_t type) {
+actor_t* actor_create(level_t* level, actor_type_t type)
+{
 	actor_t* actor = DE_NEW(actor_t);
 	actor->type = type;
 	actor->parent_level = level;
@@ -51,7 +53,8 @@ actor_t* actor_create(level_t* level, actor_type_t type) {
 	return actor;
 }
 
-void actor_free(actor_t* actor) {
+void actor_free(actor_t* actor)
+{
 	if (actor->dispatch_table->deinit) {
 		actor->dispatch_table->deinit(actor);
 	}
@@ -59,20 +62,23 @@ void actor_free(actor_t* actor) {
 	de_free(actor);
 }
 
-void actor_update(actor_t* actor) {
+void actor_update(actor_t* actor)
+{
 	if (actor->dispatch_table->update) {
 		actor->dispatch_table->update(actor);
 	}
 }
 
-bool actor_process_event(actor_t* actor, const de_event_t* evt) {
-	if(actor->dispatch_table->process_event) {
+bool actor_process_event(actor_t* actor, const de_event_t* evt)
+{
+	if (actor->dispatch_table->process_event) {
 		return actor->dispatch_table->process_event(actor, evt);
 	}
 	return false;
 }
 
-bool actor_visit(de_object_visitor_t* visitor, actor_t* actor) {
+bool actor_visit(de_object_visitor_t* visitor, actor_t* actor)
+{
 	bool result = true;
 	result &= de_object_visitor_visit_int32(visitor, "Type", (int32_t*)&actor->type);
 	if (visitor->is_reading) {
@@ -87,22 +93,27 @@ bool actor_visit(de_object_visitor_t* visitor, actor_t* actor) {
 	return result;
 }
 
-void actor_set_position(actor_t* actor, const de_vec3_t* pos) {
+void actor_set_position(actor_t* actor, const de_vec3_t* pos)
+{
 	de_node_set_local_position(actor->pivot, pos);
 }
 
-player_t* actor_to_player(actor_t* actor) {
+player_t* actor_to_player(actor_t* actor)
+{
 	return &actor->s.player;
 }
 
-actor_t* actor_from_player(player_t* player) {
+actor_t* actor_from_player(player_t* player)
+{
 	return (actor_t*)((char*)player - offsetof(actor_t, s.player));
 }
 
-bot_t* actor_to_bot(actor_t* actor) {
+bot_t* actor_to_bot(actor_t* actor)
+{
 	return &actor->s.bot;
 }
 
-actor_t* actor_from_bot(bot_t* bot) {
+actor_t* actor_from_bot(bot_t* bot)
+{
 	return (actor_t*)((char*)bot - offsetof(actor_t, s.bot));
 }

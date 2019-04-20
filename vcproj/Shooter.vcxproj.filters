@@ -241,6 +241,15 @@
     <ClCompile Include="..\src\actor.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\gui\check_box.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\hud.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\gui\image.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\DmitrysEngine\core\array.h">
@@ -485,6 +494,15 @@
     </ClInclude>
     <ClInclude Include="..\src\actor.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\gui\check_box.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\hud.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\gui\image.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

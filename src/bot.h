@@ -19,6 +19,14 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
+typedef enum bot_type_t {
+	BOT_TYPE_SOLDIER,
+	BOT_TYPE_SWAT
+} bot_type_t;
+
 typedef struct bot_t {
-	bool stub;
+	bot_type_t type;
+	de_node_t* model;
 } bot_t;
+
+actor_dispatch_table_t* bot_get_dispatch_table();

@@ -19,7 +19,8 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-void level_create_collider(level_t* level) {
+void level_create_collider(level_t* level)
+{
 	de_node_t* polygon = de_scene_find_node(level->scene, "Polygon");
 	if (polygon) {
 		de_static_geometry_t* map_collider;
@@ -30,7 +31,8 @@ void level_create_collider(level_t* level) {
 	}
 }
 
-bool level_visit(de_object_visitor_t* visitor, level_t* level) {
+bool level_visit(de_object_visitor_t* visitor, level_t* level)
+{
 	bool result = true;
 	if (visitor->is_reading) {
 		level->game = de_core_get_user_pointer(visitor->core);
@@ -43,7 +45,8 @@ bool level_visit(de_object_visitor_t* visitor, level_t* level) {
 	return result;
 }
 
-level_t* level_create_test(game_t* game) {
+level_t* level_create_test(game_t* game)
+{
 	level_t* level;
 
 	level = DE_NEW(level_t);
@@ -86,17 +89,19 @@ level_t* level_create_test(game_t* game) {
 	if (pp) {
 		de_vec3_t pos;
 		de_node_get_global_position(pp, &pos);
-		actor_set_position(level->player, &pos);		
+		actor_set_position(level->player, &pos);
 	}
 
 	return level;
 }
 
-void level_update(level_t* level) {
+void level_update(level_t* level)
+{
 	actor_update(level->player);
 }
 
-void level_free(level_t* level) {
+void level_free(level_t* level)
+{
 	actor_free(level->player);
 	de_scene_free(level->scene);
 	de_free(level);

@@ -19,7 +19,8 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-static bool player_process_event(actor_t* actor, const de_event_t* evt) {
+static bool player_process_event(actor_t* actor, const de_event_t* evt)
+{
 	player_t* p = &actor->s.player;
 	bool processed = false;
 	switch (evt->type) {
@@ -98,15 +99,31 @@ static bool player_process_event(actor_t* actor, const de_event_t* evt) {
 					break;
 			}
 			break;
-		case DE_EVENT_TYPE_MOUSE_DOWN:
+		case DE_EVENT_TYPE_MOUSE_DOWN: {
+			if(p->current_weapon < (int)p->weapons.size) {
+				weapon_t* wpn = p->weapons.data[p->current_weapon];
+				DE_UNUSED(wpn);
+
+			}			
 			break;
+		}
+		case DE_EVENT_TYPE_MOUSE_WHEEL: {
+			int delta = evt->s.mouse_wheel.delta;
+			if (delta > 0) {
+				player_next_weapon(p);
+			} else if (delta < 0) {
+				player_prev_weapon(p);
+			}
+			break;
+		}
 		default:
 			break;
 	}
 	return processed;
 }
 
-static void player_init(actor_t* actor) {
+static void player_init(actor_t* actor)
+{
 	player_t* p = &actor->s.player;
 	p->move_speed = 0.028f;
 	p->stand_body_radius = 0.5f;
@@ -134,7 +151,8 @@ static void player_init(actor_t* actor) {
 	p->weapon_pivot = de_node_create(scene, DE_NODE_TYPE_BASE);
 	de_scene_add_node(scene, p->weapon_pivot);
 	de_node_attach(p->weapon_pivot, p->camera);
-	de_node_set_local_position(p->weapon_pivot, &(de_vec3_t) { 0.065f, -0.052f, -0.02f });
+	p->weapon_position = (de_vec3_t) { 0.065f, -0.052f, -0.02f };
+	de_node_set_local_position(p->weapon_pivot, &p->weapon_position);
 
 	de_sound_context_t* ctx = de_core_get_sound_context(core);
 
@@ -148,19 +166,17 @@ static void player_init(actor_t* actor) {
 		de_sound_source_set_buffer(src, de_resource_to_sound_buffer(res));
 		DE_ARRAY_APPEND(p->footsteps, src);
 	}
-	
-#if 1
-	weapon_t* shotgun = weapon_create(level, WEAPON_TYPE_M4);
-	de_node_attach(shotgun->model, p->weapon_pivot);
-	DE_ARRAY_APPEND(p->weapons, shotgun);
-#endif
+
+	player_add_weapon(p, weapon_create(level, WEAPON_TYPE_AK47));
+	player_add_weapon(p, weapon_create(level, WEAPON_TYPE_M4));
 }
 
-static bool player_visit(de_object_visitor_t* visitor, actor_t* actor) {
+static bool player_visit(de_object_visitor_t* visitor, actor_t* actor)
+{
 	player_t* player = &actor->s.player;
 	bool result = true;
 	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "Camera", &player->camera, de_node_visit);
-	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "FlashLight", &player->flash_light, de_node_visit);	
+	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "FlashLight", &player->flash_light, de_node_visit);
 	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "WeaponPivot", &player->weapon_pivot, de_node_visit);
 	result &= de_object_visitor_visit_float(visitor, "Pitch", &player->pitch);
 	result &= de_object_visitor_visit_float(visitor, "DesiredPitch", &player->desired_pitch);
@@ -177,12 +193,16 @@ static bool player_visit(de_object_visitor_t* visitor, actor_t* actor) {
 	result &= de_object_visitor_visit_vec3(visitor, "CameraOffset", &player->camera_offset);
 	result &= de_object_visitor_visit_vec3(visitor, "CameraDestOffset", &player->camera_dest_offset);
 	result &= de_object_visitor_visit_vec3(visitor, "CameraPosition", &player->camera_position);
+	result &= de_object_visitor_visit_vec3(visitor, "WeaponOffset", &player->weapon_offset);
+	result &= de_object_visitor_visit_vec3(visitor, "WeaponDestOffset", &player->weapon_dest_offset);
+	result &= de_object_visitor_visit_vec3(visitor, "WeaponPosition", &player->weapon_position);
 	result &= DE_OBJECT_VISITOR_VISIT_POINTER_ARRAY(visitor, "Footsteps", player->footsteps, de_sound_source_visit);
 	result &= DE_OBJECT_VISITOR_VISIT_POINTER_ARRAY(visitor, "Weapons", player->weapons, weapon_visit);
 	return result;
 }
 
-static void player_deinit(actor_t* actor) {
+static void player_deinit(actor_t* actor)
+{
 	player_t* p = &actor->s.player;
 	for (size_t i = 0; i < p->weapons.size; ++i) {
 		weapon_free(p->weapons.data[i]);
@@ -194,7 +214,8 @@ static void player_deinit(actor_t* actor) {
 	DE_ARRAY_FREE(p->footsteps);
 }
 
-static void player_update(actor_t* actor) {
+static void player_update(actor_t* actor)
+{
 	de_vec3_t right_axis = { 1, 0, 0 };
 	de_vec3_t up_axis = { 0, 1, 0 };
 	de_quat_t pitch_rot, yaw_rot;
@@ -253,10 +274,16 @@ static void player_update(actor_t* actor) {
 		p->camera_dest_offset.x = 0.05f * (float)cos(p->camera_wobble * 0.5f);
 		p->camera_dest_offset.y = 0.1f * (float)sin(p->camera_wobble);
 
+		p->weapon_dest_offset.x = 0.0125f * (float)cos(p->camera_wobble * 0.5f);
+		p->weapon_dest_offset.y = 0.0125f * (float)sin(p->camera_wobble);
+
 		p->camera_wobble += 0.25f;
 	} else {
 		p->camera_dest_offset.x = 0;
 		p->camera_dest_offset.y = 0;
+
+		p->weapon_dest_offset.x = 0;
+		p->weapon_dest_offset.y = 0;
 	}
 
 	/* camera offset will follow destination offset -> smooth movements */
@@ -264,12 +291,17 @@ static void player_update(actor_t* actor) {
 	p->camera_offset.y += (p->camera_dest_offset.y - p->camera_offset.y) * 0.1f;
 	p->camera_offset.z += (p->camera_dest_offset.z - p->camera_offset.z) * 0.1f;
 
+	p->weapon_offset.x += (p->weapon_dest_offset.x - p->weapon_offset.x) * 0.1f;
+	p->weapon_offset.y += (p->weapon_dest_offset.y - p->weapon_offset.y) * 0.1f;
+	p->weapon_offset.z += (p->weapon_dest_offset.z - p->weapon_offset.z) * 0.1f;
+
 	/* set actual camera position */
-	{
-		de_vec3_t combined_position;
-		de_vec3_add(&combined_position, &p->camera_position, &p->camera_offset);
-		de_node_set_local_position(p->camera, &combined_position);
-	}
+	de_vec3_t combined_position;
+	de_vec3_add(&combined_position, &p->camera_position, &p->camera_offset);
+	de_node_set_local_position(p->camera, &combined_position);
+
+	de_vec3_add(&combined_position, &p->weapon_position, &p->weapon_offset);
+	de_node_set_local_position(p->weapon_pivot, &combined_position);
 
 	/* run */
 	if (p->controller.run) {
@@ -312,7 +344,8 @@ static void player_update(actor_t* actor) {
 	de_listener_set_position(lst, &pos);
 }
 
-actor_dispatch_table_t* player_get_dispatch_table() {
+actor_dispatch_table_t* player_get_dispatch_table()
+{
 	static actor_dispatch_table_t table = {
 		.init = player_init,
 		.deinit = player_deinit,
@@ -321,4 +354,40 @@ actor_dispatch_table_t* player_get_dispatch_table() {
 		.process_event = player_process_event,
 	};
 	return &table;
+}
+
+void player_add_weapon(player_t* player, weapon_t* wpn)
+{
+	de_node_attach(wpn->model, player->weapon_pivot);
+	DE_ARRAY_APPEND(player->weapons, wpn);
+
+	player_next_weapon(player);
+}
+
+void player_remove_weapon(player_t* player, weapon_t* wpn)
+{
+	DE_ARRAY_REMOVE(player->weapons, wpn);
+	player_prev_weapon(player);
+}
+
+void player_next_weapon(player_t* player)
+{
+	++player->current_weapon;
+	if (player->current_weapon >= (int)player->weapons.size) {
+		player->current_weapon = (int)player->weapons.size - 1;
+	}
+	for (size_t i = 0; i < player->weapons.size; ++i) {
+		weapon_set_visible(player->weapons.data[i], i == (size_t)player->current_weapon ? true : false);
+	}
+}
+
+void player_prev_weapon(player_t* player)
+{
+	--player->current_weapon;
+	if (player->current_weapon < 0) {
+		player->current_weapon = 0;
+	}
+	for (size_t i = 0; i < player->weapons.size; ++i) {
+		weapon_set_visible(player->weapons.data[i], i == (size_t)player->current_weapon ? true : false);
+	}
 }

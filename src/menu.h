@@ -40,7 +40,7 @@ struct menu_t {
 	game_t* game;
 	main_page_t main_page;
 	settings_page_t settings_page;
-	menu_page_type_t page;	
+	menu_page_type_t page;
 	bool visible;
 };
 

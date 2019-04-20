@@ -44,9 +44,21 @@ struct player_t {
 	de_vec3_t camera_offset;
 	de_vec3_t camera_dest_offset;
 	de_vec3_t camera_position;
+	de_vec3_t weapon_dest_offset;
+	de_vec3_t weapon_offset;
+	de_vec3_t weapon_position;
+	int current_weapon;
 	DE_ARRAY_DECLARE(weapon_t*, weapons);
 	player_controller_t controller;
 	DE_ARRAY_DECLARE(de_sound_source_t*, footsteps);
 };
 
 actor_dispatch_table_t* player_get_dispatch_table();
+
+void player_add_weapon(player_t* player, weapon_t* wpn);
+
+void player_remove_weapon(player_t* player, weapon_t* wpn);
+
+void player_next_weapon(player_t* player);
+
+void player_prev_weapon(player_t* player);
