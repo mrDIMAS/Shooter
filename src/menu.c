@@ -316,7 +316,7 @@ menu_t* menu_create(game_t* game)
 	de_gui_grid_add_column(menu->root, 400, DE_GUI_SIZE_MODE_STRICT); // central column
 	de_gui_grid_add_column(menu->root, 0, DE_GUI_SIZE_MODE_STRETCH);
 
-	de_gui_node_set_desired_size(menu->root,
+	de_gui_node_set_size(menu->root,
 		(float)de_core_get_window_width(game->core),
 		(float)de_core_get_window_height(game->core)
 	);
@@ -351,6 +351,7 @@ bool menu_process_event(menu_t* menu, de_event_t* evt)
 				} else {
 					if (menu->game->level) {
 						menu_set_visible(menu, !menu->visible);
+						hud_set_visible(menu->game->hud, !menu->visible);
 					} else {
 						menu_set_visible(menu, true);
 					}
@@ -359,7 +360,7 @@ bool menu_process_event(menu_t* menu, de_event_t* evt)
 			}
 			break;
 		case DE_EVENT_TYPE_RESIZE:
-			de_gui_node_set_desired_size(menu->root, (float)evt->s.resize.w, (float)evt->s.resize.h);
+			de_gui_node_set_size(menu->root, (float)evt->s.resize.w, (float)evt->s.resize.h);
 			break;
 		default:
 			break;

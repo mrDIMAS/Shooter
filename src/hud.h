@@ -28,6 +28,6 @@ hud_t* hud_create(game_t* game);
 
 void hud_free(hud_t* hud);
 
-void hud_set_visible(hud_t* hud);
+void hud_set_visible(hud_t* hud, bool visible);
 
 bool hud_process_event(hud_t* hud, de_event_t* evt);
