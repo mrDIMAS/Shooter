@@ -113,12 +113,14 @@ static void settings_page_init(menu_t* menu, settings_page_t* page)
 	de_gui_node_set_row(page->window, 1);
 
 	de_gui_node_t* grid = de_gui_node_create_with_desc(gui, DE_GUI_NODE_GRID, &(de_gui_node_descriptor_t) {
-		.s.grid = (de_gui_grid_descriptor_t)
+		.margin = (de_gui_thickness_t) { .left = 5, .top = 5, .right = 5, .bottom = 5 },
+			.s.grid = (de_gui_grid_descriptor_t)
 		{
 			.rows[0] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
 				.rows[1] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
 				.rows[2] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
 				.rows[3] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
+				.rows[4] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
 
 				.columns[0] = { .desired_width = 140, .size_mode = DE_GUI_SIZE_MODE_STRICT },
 				.columns[1] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
@@ -148,10 +150,28 @@ static void settings_page_init(menu_t* menu, settings_page_t* page)
 		});
 	}
 
-	/* player name */
+	/* fullscreen */
 	{
 		de_gui_node_create_with_desc(gui, DE_GUI_NODE_TEXT, &(de_gui_node_descriptor_t) {
 			.row = 1, .column = 0, .parent = grid, .margin = (de_gui_thickness_t) { .left = 5 },
+				.s.text_block = (de_gui_text_descriptor_t)
+			{
+				.text = "Fullscreen", .vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_CENTER,
+			}
+		});
+
+		de_gui_node_create_with_desc(gui, DE_GUI_NODE_CHECK_BOX, &(de_gui_node_descriptor_t){
+			.row = 1, .column = 1, .parent = grid, .margin = (de_gui_thickness_t) { .left = 5 },
+				.width = 20, .height = 20, .vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_CENTER,
+				.horizontal_alignment = DE_GUI_HORIZONTAL_ALIGNMENT_LEFT,
+				.s.check_box = (de_gui_check_box_descriptor_t) { .checked = true }
+		});
+	}
+
+	/* player name */
+	{
+		de_gui_node_create_with_desc(gui, DE_GUI_NODE_TEXT, &(de_gui_node_descriptor_t) {
+			.row = 2, .column = 0, .parent = grid, .margin = (de_gui_thickness_t) { .left = 5 },
 				.s.text_block = (de_gui_text_descriptor_t)
 			{
 				.text = "Player Name", .vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_CENTER,
@@ -160,7 +180,7 @@ static void settings_page_init(menu_t* menu, settings_page_t* page)
 
 		de_gui_node_t* text_box = de_gui_node_create(gui, DE_GUI_NODE_TEXT_BOX);
 		de_gui_node_apply_descriptor(text_box, &(de_gui_node_descriptor_t) {
-			.row = 1, .column = 1, .parent = grid,
+			.row = 2, .column = 1, .parent = grid,
 				.margin = de_gui_thickness_uniform(2)
 		});
 	}
@@ -168,7 +188,7 @@ static void settings_page_init(menu_t* menu, settings_page_t* page)
 	/* sound volume */
 	{
 		de_gui_node_create_with_desc(gui, DE_GUI_NODE_TEXT, &(de_gui_node_descriptor_t) {
-			.row = 2, .column = 0, .parent = grid, .margin = (de_gui_thickness_t) { .left = 5 },
+			.row = 3, .column = 0, .parent = grid, .margin = (de_gui_thickness_t) { .left = 5 },
 				.s.text_block = (de_gui_text_descriptor_t)
 			{
 				.text = "Sound Volume", .vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_CENTER,
@@ -176,7 +196,7 @@ static void settings_page_init(menu_t* menu, settings_page_t* page)
 		});
 
 		de_gui_node_create_with_desc(gui, DE_GUI_NODE_SCROLL_BAR, &(de_gui_node_descriptor_t) {
-			.row = 2, .column = 1, .parent = grid, .margin = de_gui_thickness_uniform(2),
+			.row = 3, .column = 1, .parent = grid, .margin = de_gui_thickness_uniform(2),
 				.user_data = menu, .s.scroll_bar = (de_gui_scroll_bar_descriptor_t)
 			{
 				.value_changed = sound_volume_changed,
@@ -188,7 +208,7 @@ static void settings_page_init(menu_t* menu, settings_page_t* page)
 	/* music volume */
 	{
 		de_gui_node_create_with_desc(gui, DE_GUI_NODE_TEXT, &(de_gui_node_descriptor_t) {
-			.row = 3, .column = 0, .parent = grid, .margin = (de_gui_thickness_t) { .left = 5 },
+			.row = 4, .column = 0, .parent = grid, .margin = (de_gui_thickness_t) { .left = 5 },
 				.s.text_block = (de_gui_text_descriptor_t)
 			{
 				.text = "Music Volume", .vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_CENTER,
@@ -196,7 +216,7 @@ static void settings_page_init(menu_t* menu, settings_page_t* page)
 		});
 
 		de_gui_node_create_with_desc(gui, DE_GUI_NODE_SCROLL_BAR, &(de_gui_node_descriptor_t) {
-			.row = 3, .column = 1, .parent = grid, .margin = de_gui_thickness_uniform(2),
+			.row = 4, .column = 1, .parent = grid, .margin = de_gui_thickness_uniform(2),
 				.user_data = menu, .s.scroll_bar = (de_gui_scroll_bar_descriptor_t)
 			{
 				.value_changed = music_volume_changed,
@@ -242,8 +262,7 @@ static void main_page_init(menu_t* menu, main_page_t* page)
 		.row = 0, .parent = grid, .margin = de_gui_thickness_uniform(10),
 			.s.button = (de_gui_button_descriptor_t)
 		{
-			.text = "New Game",
-				.click = (de_gui_callback_t) { .func = menu_on_new_game_click, .arg = menu->game }
+			.text = "New Game", .click = (de_gui_callback_t) { .func = menu_on_new_game_click, .arg = menu->game }
 		}
 	});
 
@@ -252,8 +271,7 @@ static void main_page_init(menu_t* menu, main_page_t* page)
 		.row = 1, .parent = grid, .margin = de_gui_thickness_uniform(10),
 			.s.button = (de_gui_button_descriptor_t)
 		{
-			.text = "Save Game",
-				.click = (de_gui_callback_t) { .func = menu_on_save_click, .arg = menu->game }
+			.text = "Save Game", .click = (de_gui_callback_t) { .func = menu_on_save_click, .arg = menu->game }
 		}
 	});
 
@@ -262,8 +280,7 @@ static void main_page_init(menu_t* menu, main_page_t* page)
 		.row = 2, .parent = grid, .margin = de_gui_thickness_uniform(10),
 			.s.button = (de_gui_button_descriptor_t)
 		{
-			.text = "Load Game",
-				.click = (de_gui_callback_t) { .func = menu_on_load_click, .arg = menu->game }
+			.text = "Load Game", .click = (de_gui_callback_t) { .func = menu_on_load_click, .arg = menu->game }
 		}
 	});
 
@@ -272,8 +289,7 @@ static void main_page_init(menu_t* menu, main_page_t* page)
 		.row = 3, .parent = grid, .margin = de_gui_thickness_uniform(10),
 			.s.button = (de_gui_button_descriptor_t)
 		{
-			.text = "Settings",
-				.click = (de_gui_callback_t) { .func = menu_on_settings_click, .arg = menu->game }
+			.text = "Settings", .click = (de_gui_callback_t) { .func = menu_on_settings_click, .arg = menu->game }
 		}
 	});
 
@@ -282,8 +298,7 @@ static void main_page_init(menu_t* menu, main_page_t* page)
 		.row = 4, .parent = grid, .margin = de_gui_thickness_uniform(10),
 			.s.button = (de_gui_button_descriptor_t)
 		{
-			.text = "Quit",
-				.click = (de_gui_callback_t) { .func = quit_on_click, .arg = menu->game }
+			.text = "Quit", .click = (de_gui_callback_t) { .func = quit_on_click, .arg = menu->game }
 		}
 	});
 
