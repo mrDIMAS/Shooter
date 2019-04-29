@@ -73,8 +73,8 @@ static game_t* game_create(void)
 	{
 		.video_mode = (de_video_mode_t)
 		{
-			.width = 1200,
-				.height = 1000,
+			.width = 1350,
+				.height = 690,
 				.bits_per_pixel = 32,
 				.fullscreen = false
 		}
@@ -109,11 +109,6 @@ static void game_main_loop(game_t* game)
 	while (de_core_is_running(game->core)) {
 		dt = de_time_get_seconds() - game_clock;
 		while (dt >= fixed_timestep) {
-			if (dt >= 4 * fixed_timestep) {
-				game_clock = de_time_get_seconds();
-				break;
-			}
-
 			dt -= fixed_timestep;
 			game_clock += fixed_timestep;
 
@@ -140,6 +135,11 @@ static void game_main_loop(game_t* game)
 
 			if (game->level && !game->main_menu->visible) {
 				level_update(game->level);
+			}
+
+			if (dt >= 4 * fixed_timestep) {
+				game_clock = de_time_get_seconds();
+				break;
 			}
 		}
 
