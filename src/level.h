@@ -23,6 +23,7 @@ struct level_t {
 	game_t* game;
 	de_scene_t* scene;
 	actor_t* player;
+	DE_LINKED_LIST_DECLARE(struct projectile_t, projectiles);
 };
 
 void level_create_collider(level_t* level);

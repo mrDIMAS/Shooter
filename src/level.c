@@ -47,42 +47,44 @@ bool level_visit(de_object_visitor_t* visitor, level_t* level)
 
 level_t* level_create_test(game_t* game)
 {
-	level_t* level;
-
-	level = DE_NEW(level_t);
+	level_t* level = DE_NEW(level_t);
 	level->game = game;
 	level->scene = de_scene_create(game->core);
 
+	de_path_t res_path;
+	de_path_init(&res_path);
+
 	/* Ripper */
-	{
-		de_path_t res_path;
-		de_path_init(&res_path);
-		de_path_append_cstr(&res_path, "data/models/ripper.fbx");
-		de_resource_t* mdl_res = de_core_request_resource(game->core, DE_RESOURCE_TYPE_MODEL, &res_path, 0);
-		de_model_t* mdl = de_resource_to_model(mdl_res);
-		de_node_t* ripper1 = de_model_instantiate(mdl, level->scene);
-		de_node_set_local_position(ripper1, &(de_vec3_t){ -1, 0, -1 });
-		de_node_t* ripper2 = de_model_instantiate(mdl, level->scene);
-		de_node_set_local_position(ripper2, &(de_vec3_t){ 1, 0, -1 });
-		de_node_t* ripper3 = de_model_instantiate(mdl, level->scene);
-		de_node_set_local_position(ripper3, &(de_vec3_t){ 1, 0, 1 });
-		de_node_t* ripper4 = de_model_instantiate(mdl, level->scene);
-		de_node_set_local_position(ripper4, &(de_vec3_t){ -1, 0, 1 });
-		de_path_free(&res_path);
-	}
+	de_path_append_cstr(&res_path, "data/models/ripper.fbx");
+	de_resource_t* res = de_core_request_resource(game->core, DE_RESOURCE_TYPE_MODEL, &res_path, 0);
+	de_model_t* mdl = de_resource_to_model(res);
+	de_node_t* ripper1 = de_model_instantiate(mdl, level->scene);
+	de_node_set_local_position(ripper1, &(de_vec3_t){ -1, 0, -1 });
+	de_node_t* ripper2 = de_model_instantiate(mdl, level->scene);
+	de_node_set_local_position(ripper2, &(de_vec3_t){ 1, 0, -1 });
+	de_node_t* ripper3 = de_model_instantiate(mdl, level->scene);
+	de_node_set_local_position(ripper3, &(de_vec3_t){ 1, 0, 1 });
+	de_node_t* ripper4 = de_model_instantiate(mdl, level->scene);
+	de_node_set_local_position(ripper4, &(de_vec3_t){ -1, 0, 1 });
 
 	/* Level */
-	{
-		de_path_t res_path;
-		de_path_init(&res_path);
-		de_path_append_cstr(&res_path, "data/models/map2_bin.fbx");
-		de_resource_t* res = de_core_request_resource(game->core, DE_RESOURCE_TYPE_MODEL, &res_path, 0);
-		de_model_t* mdl = de_resource_to_model(res);
-		de_model_instantiate(mdl, level->scene);
-		de_path_free(&res_path);
-	}
+	de_path_clear(&res_path);
+	de_path_append_cstr(&res_path, "data/models/map2_bin.fbx");
+	res = de_core_request_resource(game->core, DE_RESOURCE_TYPE_MODEL, &res_path, 0);
+	de_model_instantiate(de_resource_to_model(res), level->scene);
 
 	level_create_collider(level);
+
+	de_node_t* particle_system_node = de_node_create(level->scene, DE_NODE_TYPE_PARTICLE_SYSTEM);
+	de_particle_system_t* particle_system = de_node_to_particle_system(particle_system_node);
+	de_particle_system_create_particles(particle_system, 500);
+	de_path_clear(&res_path);
+	de_path_append_cstr(&res_path, "data/particles/smoke_04.tga");
+	res = de_core_request_resource(game->core, DE_RESOURCE_TYPE_TEXTURE, &res_path, 0);
+	de_particle_system_set_texture(particle_system, de_resource_to_texture(res));
+	de_scene_add_node(level->scene, particle_system_node);
+
+	de_path_free(&res_path);
 
 	level->player = actor_create(level, ACTOR_TYPE_PLAYER);
 	de_node_t* pp = de_scene_find_node(level->scene, "PlayerPosition");
@@ -98,6 +100,10 @@ level_t* level_create_test(game_t* game)
 void level_update(level_t* level)
 {
 	actor_update(level->player);
+	DE_LINKED_LIST_FOR_EACH_T(projectile_t*, projectile, level->projectiles)
+	{
+		projectile_update(projectile);
+	}
 }
 
 void level_free(level_t* level)

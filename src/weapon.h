@@ -39,3 +39,5 @@ void weapon_update(weapon_t* wpn);
 bool weapon_visit(de_object_visitor_t* visitor, weapon_t* wpn);
 
 void weapon_set_visible(weapon_t* wpn, bool state);
+
+void weapon_shoot(weapon_t* wpn);

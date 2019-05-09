@@ -59,3 +59,4 @@ typedef struct actor_dispatch_table_t {
 #include "bot.h"
 #include "actor.h"
 #include "hud.h"
+#include "projectile.h"

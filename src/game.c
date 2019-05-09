@@ -29,6 +29,7 @@
 #include "bot.c"
 #include "actor.c"
 #include "hud.c"
+#include "projectile.c"
 
 bool game_save(game_t* game)
 {
@@ -80,7 +81,7 @@ static game_t* game_create(void)
 		}
 	});
 	de_core_set_user_pointer(game->core, game);
-	de_renderer_set_framerate_limit(de_core_get_renderer(game->core), 0);
+	de_renderer_set_framerate_limit(de_core_get_renderer(game->core), 60);
 
 	/* Create menu */
 	game->main_menu = menu_create(game);
@@ -95,23 +96,18 @@ static game_t* game_create(void)
 
 static void game_main_loop(game_t* game)
 {
-	double game_clock, fixed_fps, fixed_timestep, dt;
-	de_event_t evt;
-	de_renderer_t* renderer;
-	de_gui_t* gui;
-
-	renderer = de_core_get_renderer(game->core);
-	gui = de_core_get_gui(game->core);
-
-	fixed_fps = 60.0;
-	fixed_timestep = 1.0f / fixed_fps;
-	game_clock = de_time_get_seconds();
+	de_renderer_t* renderer = de_core_get_renderer(game->core);
+	de_gui_t* gui = de_core_get_gui(game->core);
+	const double fixed_fps = 60.0;
+	const double fixed_timestep = 1.0f / fixed_fps;
+	double game_clock = de_time_get_seconds();
 	while (de_core_is_running(game->core)) {
-		dt = de_time_get_seconds() - game_clock;
+		double dt = de_time_get_seconds() - game_clock;
 		while (dt >= fixed_timestep) {
 			dt -= fixed_timestep;
 			game_clock += fixed_timestep;
 
+			de_event_t evt;
 			while (de_core_poll_event(game->core, &evt)) {
 				bool processed = menu_process_event(game->main_menu, &evt);
 				if (!processed) {
@@ -146,20 +142,12 @@ static void game_main_loop(game_t* game)
 		de_renderer_render(renderer);
 
 		/* print statistics */
-		{
-			char buffer[256];
-			double frame_time;
-			size_t fps;
-
-			frame_time = de_render_get_frame_time(renderer);
-			fps = de_renderer_get_fps(renderer);
-
-			snprintf(buffer, sizeof(buffer), "Frame time: %.2f ms\nFPS: %d\nAllocations: %d",
-				frame_time,
-				(int)fps,
-				(int)de_get_alloc_count());
-			de_gui_text_set_text_utf8(game->fps_text, buffer);
-		}
+		char buffer[1024];
+		snprintf(buffer, sizeof(buffer), "Frame time: %.2f ms\nFPS: (Mean: %d; Current: %d; Min: %d)\nAllocations: %d",
+			de_render_get_frame_time(renderer),
+			(int)de_renderer_get_mean_fps(renderer), (int)renderer->current_fps, (int)renderer->min_fps,
+			(int)de_get_alloc_count());
+		de_gui_text_set_text_utf8(game->fps_text, buffer);
 	}
 }
 
@@ -180,12 +168,9 @@ static void game_close(game_t* game)
 
 int main(int argc, char** argv)
 {
-	game_t* game;
-
-	DE_UNUSED(argc);
-	DE_UNUSED(argv);
-
-	game = game_create();
+	DE_UNUSED(argc, argv);
+	
+	game_t* game = game_create();
 
 	game_main_loop(game);
 

@@ -22,6 +22,10 @@
 static bool player_process_event(actor_t* actor, const de_event_t* evt)
 {
 	player_t* p = &actor->s.player;
+	de_vec3_t position;
+	de_node_get_global_position(p->camera, &position);
+	de_vec3_t look;
+	de_node_get_look_vector(p->camera, &look);
 	bool processed = false;
 	switch (evt->type) {
 		case DE_EVENT_TYPE_MOUSE_MOVE:
@@ -50,6 +54,10 @@ static bool player_process_event(actor_t* actor, const de_event_t* evt)
 					break;
 				case DE_KEY_C:
 					p->controller.crouch = true;
+					break;
+				case DE_KEY_G:
+					/* throw grenade */
+					projectile_create(actor->parent_level, PROJECTILE_TYPE_GRENADE, &position, &look);
 					break;
 				case DE_KEY_Space:
 					if (!p->controller.jumped) {

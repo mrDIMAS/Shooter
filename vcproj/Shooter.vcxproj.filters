@@ -250,6 +250,12 @@
     <ClCompile Include="..\..\DmitrysEngine\gui\image.c">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\projectile.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\scene\particle_system.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\DmitrysEngine\core\array.h">
@@ -502,6 +508,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\DmitrysEngine\gui\image.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\projectile.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\scene\particle_system.h">
       <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>

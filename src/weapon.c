@@ -42,7 +42,7 @@ weapon_t* weapon_create(level_t* level, weapon_type_t type)
 	wpn->model = de_model_instantiate(de_resource_to_model(model_resource), level->scene);
 	/* make sure weapon will not penetrate into walls (in most cases it will be rendered above all 
 	 * other geometry) */
-	de_node_set_depth_hack(wpn->model, 0.1f);
+	//de_node_set_depth_hack(wpn->model, 0.1f);
 	return wpn;
 }
 
@@ -68,4 +68,9 @@ bool weapon_visit(de_object_visitor_t* visitor, weapon_t* wpn)
 	result &= de_object_visitor_visit_int32(visitor, "Type", (int32_t*)&wpn->type);
 	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "Model", &wpn->model, de_node_visit);
 	return result;
+}
+
+void weapon_shoot(weapon_t* wpn)
+{
+	DE_UNUSED(wpn);
 }
