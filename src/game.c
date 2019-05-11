@@ -70,7 +70,7 @@ static game_t* game_create(void)
 	de_log_open("dengine.log");
 
 	/* Init core */
-	game->core = de_core_init(&(de_engine_params_t)
+	game->core = de_core_init(&(de_core_config_t)
 	{
 		.video_mode = (de_video_mode_t)
 		{
