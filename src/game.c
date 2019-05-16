@@ -67,7 +67,7 @@ bool game_load(game_t* game)
 static game_t* game_create(void)
 {
 	game_t* game = DE_NEW(game_t);
-	de_log_open("dengine.log");
+	de_log_open("Shooter.log");
 
 	/* Init core */
 	game->core = de_core_init(&(de_core_config_t)
@@ -78,7 +78,8 @@ static game_t* game_create(void)
 				.height = 690,
 				.bits_per_pixel = 32,
 				.fullscreen = false
-		}
+		},
+		.title = "Shooter"
 	});
 	de_core_set_user_pointer(game->core, game);
 	de_renderer_set_framerate_limit(de_core_get_renderer(game->core), 60);

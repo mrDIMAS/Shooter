@@ -77,7 +77,9 @@ level_t* level_create_test(game_t* game)
 
 	de_node_t* particle_system_node = de_node_create(level->scene, DE_NODE_TYPE_PARTICLE_SYSTEM);
 	de_particle_system_t* particle_system = de_node_to_particle_system(particle_system_node);
-	de_particle_system_create_particles(particle_system, 500);
+	de_particle_system_emitter_t* emitter = de_particle_system_emitter_create(particle_system, DE_PARTICLE_SYSTEM_EMITTER_TYPE_BOX);
+	emitter->max_particles = 1000;
+	emitter->particle_spawn_rate = 50;	
 	de_path_clear(&res_path);
 	de_path_append_cstr(&res_path, "data/particles/smoke_04.tga");
 	res = de_core_request_resource(game->core, DE_RESOURCE_TYPE_TEXTURE, &res_path, 0);
