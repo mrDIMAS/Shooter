@@ -91,12 +91,15 @@ static void sound_volume_changed(de_gui_node_t* node, float old_value, float new
 {
 	menu_t* menu = node->user_data;
 	de_sound_context_set_master_volume(de_core_get_sound_context(menu->game->core), new_value);
-	DE_UNUSED(node, old_value);
+	DE_UNUSED(node);
+    DE_UNUSED(old_value);
 }
 
 static void music_volume_changed(de_gui_node_t* node, float old_value, float new_value)
 {
-	DE_UNUSED(node, old_value, new_value);
+	DE_UNUSED(node);
+    DE_UNUSED(old_value);
+    DE_UNUSED(new_value);
 }
 
 static void settings_page_init(menu_t* menu, settings_page_t* page)

@@ -175,8 +175,8 @@ static void player_init(actor_t* actor)
 		DE_ARRAY_APPEND(p->footsteps, src);
 	}
 
-	player_add_weapon(p, weapon_create(level, WEAPON_TYPE_AK47));
 	player_add_weapon(p, weapon_create(level, WEAPON_TYPE_M4));
+	player_add_weapon(p, weapon_create(level, WEAPON_TYPE_AK47));
 }
 
 static bool player_visit(de_object_visitor_t* visitor, actor_t* actor)

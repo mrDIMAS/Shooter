@@ -85,7 +85,7 @@
         <Library Value="Xrandr"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="../bin/test.exe" IntermediateDirectory="./Debug" Command="../bin/test.exe" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="../bin/" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <General OutputFile="../bin/Shooter" IntermediateDirectory="./Debug" Command="../bin/Shooter" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="../bin/" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
       <BuildSystem Name="Default"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[]]>
@@ -132,7 +132,7 @@
         <Library Value="dxguid"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="../bin/test.exe" IntermediateDirectory="./Release" Command="../bin/test.exe" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="../bin/" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <General OutputFile="../bin/Shooter" IntermediateDirectory="./Release" Command="../bin/Shooter" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="../bin/" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
       <BuildSystem Name="Default"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[]]>

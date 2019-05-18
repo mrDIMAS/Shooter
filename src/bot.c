@@ -41,7 +41,8 @@ static void bot_deinit(actor_t* actor)
 static bool bot_visit(de_object_visitor_t* visitor, actor_t* actor)
 {
 	bool result = true;
-	DE_UNUSED(visitor, actor);
+	DE_UNUSED(visitor);
+    DE_UNUSED(actor);
 	return result;
 }
 

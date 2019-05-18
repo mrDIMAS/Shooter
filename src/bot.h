@@ -24,9 +24,9 @@ typedef enum bot_type_t {
 	BOT_TYPE_SWAT
 } bot_type_t;
 
-typedef struct bot_t {
+struct bot_t {
 	bot_type_t type;
 	de_node_t* model;
-} bot_t;
+};
 
 actor_dispatch_table_t* bot_get_dispatch_table();
