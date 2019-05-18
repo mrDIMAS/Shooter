@@ -169,6 +169,8 @@ static void game_close(game_t* game)
 
 int main(int argc, char** argv)
 {
+	de_color_gradient_tests();
+
 	DE_UNUSED(argc, argv);
 	
 	game_t* game = game_create();
