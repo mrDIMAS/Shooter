@@ -80,6 +80,7 @@ level_t* level_create_test(game_t* game)
 	de_particle_system_emitter_t* emitter = de_particle_system_emitter_create(particle_system, DE_PARTICLE_SYSTEM_EMITTER_TYPE_SPHERE);
 	emitter->max_particles = 1000;
 	emitter->particle_spawn_rate = 50;	
+	particle_system->acceleration.y = -0.1f;
 	de_color_gradient_t* gradient = de_particle_system_get_color_gradient_over_lifetime(particle_system);
 	de_color_gradient_add_point(gradient, 0.00f, &(de_color_t) { 150, 150, 150, 0 });
 	de_color_gradient_add_point(gradient, 0.05f, &(de_color_t) { 150, 150, 150, 220 });
