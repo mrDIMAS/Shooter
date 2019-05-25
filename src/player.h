@@ -51,6 +51,7 @@ struct player_t {
 	DE_ARRAY_DECLARE(weapon_t*, weapons);
 	player_controller_t controller;
 	DE_ARRAY_DECLARE(de_sound_source_t*, footsteps);
+	de_node_t* laser_dot;
 };
 
 actor_dispatch_table_t* player_get_dispatch_table();

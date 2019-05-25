@@ -90,8 +90,7 @@ level_t* level_create_test(game_t* game)
 	de_path_append_cstr(&res_path, "data/particles/smoke_04.tga");
 	res = de_core_request_resource(game->core, DE_RESOURCE_TYPE_TEXTURE, &res_path, 0);
 	de_particle_system_set_texture(particle_system, de_resource_to_texture(res));
-	de_scene_add_node(level->scene, particle_system_node);
-
+	
 	de_path_free(&res_path);
 
 	level->player = actor_create(level, ACTOR_TYPE_PLAYER);

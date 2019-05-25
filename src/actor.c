@@ -44,7 +44,6 @@ actor_t* actor_create(level_t* level, actor_type_t type)
 	de_body_set_gravity(actor->body, &(de_vec3_t) {.y = -20 });
 
 	actor->pivot = de_node_create(level->scene, DE_NODE_TYPE_BASE);
-	de_scene_add_node(level->scene, actor->pivot);
 	de_node_set_body(actor->pivot, actor->body);
 
 	if (actor->dispatch_table->init) {

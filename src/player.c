@@ -30,7 +30,7 @@ static bool player_process_event(actor_t* actor, const de_event_t* evt)
 	switch (evt->type) {
 		case DE_EVENT_TYPE_MOUSE_MOVE:
 			p->desired_yaw -= evt->s.mouse_move.vx;
-			p->desired_pitch -= evt->s.mouse_move.vy;
+			p->desired_pitch += evt->s.mouse_move.vy;
 			if (p->desired_pitch > 90.0) {
 				p->desired_pitch = 90.0;
 			}
@@ -147,19 +147,20 @@ static void player_init(actor_t* actor)
 	de_body_set_radius(actor->body, p->stand_body_radius);
 
 	p->camera = de_node_create(scene, DE_NODE_TYPE_CAMERA);
-	de_scene_add_node(scene, p->camera);
 	de_node_set_local_position(p->camera, &p->camera_position);
 	de_node_attach(p->camera, actor->pivot);
 
 	p->flash_light = de_node_create(scene, DE_NODE_TYPE_LIGHT);
 	de_light_set_radius(de_node_to_light(p->flash_light), 4);
-	de_scene_add_node(scene, p->flash_light);
 	de_node_attach(p->flash_light, p->camera);
 
+	p->laser_dot = de_node_create(scene, DE_NODE_TYPE_LIGHT);
+	de_light_set_radius(de_node_to_light(p->laser_dot), 0.5f);
+	de_light_set_color(de_node_to_light(p->laser_dot), &(de_color_t) { 255, 0, 0, 255 });
+
 	p->weapon_pivot = de_node_create(scene, DE_NODE_TYPE_BASE);
-	de_scene_add_node(scene, p->weapon_pivot);
 	de_node_attach(p->weapon_pivot, p->camera);
-	p->weapon_position = (de_vec3_t) { 0.065f, -0.052f, -0.02f };
+	p->weapon_position = (de_vec3_t) { -0.065f, -0.052f, 0.02f };
 	de_node_set_local_position(p->weapon_pivot, &p->weapon_position);
 
 	de_sound_context_t* ctx = de_core_get_sound_context(core);
@@ -186,6 +187,7 @@ static bool player_visit(de_object_visitor_t* visitor, actor_t* actor)
 	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "Camera", &player->camera, de_node_visit);
 	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "FlashLight", &player->flash_light, de_node_visit);
 	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "WeaponPivot", &player->weapon_pivot, de_node_visit);
+	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "LaserDot", &player->laser_dot, de_node_visit);
 	result &= de_object_visitor_visit_float(visitor, "Pitch", &player->pitch);
 	result &= de_object_visitor_visit_float(visitor, "DesiredPitch", &player->desired_pitch);
 	result &= de_object_visitor_visit_float(visitor, "Yaw", &player->yaw);
@@ -237,23 +239,25 @@ static void player_update(actor_t* actor)
 	de_vec3_t look = (de_vec3_t) { 0 };
 	de_vec3_t side = (de_vec3_t) { 0 };
 	de_node_get_look_vector(pivot, &look);
+	de_vec3_normalize(&look, &look);
 	de_node_get_side_vector(pivot, &side);
+	de_vec3_normalize(&side, &side);
 
 	/* movement */
 	if (p->controller.move_forward) {
-		de_vec3_sub(&offset, &offset, &look);
-		is_moving = true;
-	}
-	if (p->controller.move_backward) {
 		de_vec3_add(&offset, &offset, &look);
 		is_moving = true;
 	}
+	if (p->controller.move_backward) {
+		de_vec3_sub(&offset, &offset, &look);
+		is_moving = true;
+	}
 	if (p->controller.strafe_left) {
-		de_vec3_sub(&offset, &offset, &side);
+		de_vec3_add(&offset, &offset, &side);
 		is_moving = true;
 	}
 	if (p->controller.strafe_right) {
-		de_vec3_add(&offset, &offset, &side);
+		de_vec3_sub(&offset, &offset, &side);
 		is_moving = true;
 	}
 
@@ -342,14 +346,33 @@ static void player_update(actor_t* actor)
 
 	de_node_set_local_rotation(pivot, de_quat_from_axis_angle(&yaw_rot, &up_axis, de_deg_to_rad(p->yaw)));
 	de_node_set_local_rotation(camera, de_quat_from_axis_angle(&pitch_rot, &right_axis, de_deg_to_rad(p->pitch)));
+	
+	de_vec3_t camera_global_position;
+	de_node_get_global_position(p->camera, &camera_global_position);
+
+	de_vec3_t camera_look;
+	de_node_get_look_vector(camera, &camera_look);
+		
+	const de_ray_t laser_sight_ray = { 
+		.origin = camera_global_position, .dir = { camera_look.x * 100, camera_look.y * 100, camera_look.z * 100 }
+	};
+	de_ray_cast_result_t ray_cast_result;
+	if(de_ray_cast_closest(actor->parent_level->scene, &laser_sight_ray, DE_RAY_CAST_FLAGS_IGNORE_BODY_IN_RAY, &ray_cast_result)) {
+		de_vec3_t dot_offset;
+		de_vec3_normalize(&dot_offset, &ray_cast_result.normal);
+		de_vec3_scale(&dot_offset, &dot_offset, 0.2f);
+
+		de_vec3_t laser_dot_position;		
+		de_vec3_add(&laser_dot_position, &ray_cast_result.position, &dot_offset);
+		de_node_set_local_position(p->laser_dot, &laser_dot_position);
+	}
 
 	/* listener */
-	de_vec3_t pos;
 	de_sound_context_t* ctx = de_core_get_sound_context(actor->parent_level->game->core);
 	de_listener_t* lst = de_sound_context_get_listener(ctx);
-	de_node_get_global_position(p->camera, &pos);
+	
 	de_listener_set_orientation(lst, &look, &up_axis);
-	de_listener_set_position(lst, &pos);
+	de_listener_set_position(lst, &camera_global_position);
 }
 
 actor_dispatch_table_t* player_get_dispatch_table()
