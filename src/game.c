@@ -169,11 +169,13 @@ static void game_close(game_t* game)
 
 int main(int argc, char** argv)
 {
+	de_graph_tests();
+
 	DE_UNUSED(argc);
     DE_UNUSED(argv);
 	
 	game_t* game = game_create();
-
+		
 	game_main_loop(game);
 
 	game_close(game);

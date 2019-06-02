@@ -259,6 +259,9 @@
     <ClCompile Include="..\..\DmitrysEngine\core\color_gradient.c">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\core\pathfinder.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\DmitrysEngine\core\array.h">
@@ -520,6 +523,9 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\DmitrysEngine\core\color_gradient.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\core\pathfinder.h">
       <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
