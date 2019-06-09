@@ -75,9 +75,9 @@ static game_t* game_create(void)
 		.video_mode = (de_video_mode_t)
 		{
 			.width = 1350,
-				.height = 690,
-				.bits_per_pixel = 32,
-				.fullscreen = false
+			.height = 690,
+			.bits_per_pixel = 32,
+			.fullscreen = false
 		},
 		.title = "Shooter"
 	});
@@ -144,10 +144,10 @@ static void game_main_loop(game_t* game)
 
 		/* print statistics */
 		char buffer[1024];
-		snprintf(buffer, sizeof(buffer), "Frame time: %.2f ms\nFPS: (Mean: %d; Current: %d; Min: %d)\nAllocations: %d",
+		snprintf(buffer, sizeof(buffer), "Frame time: %.2f ms\nFPS: (Mean: %d; Current: %d; Min: %d)\nDraw calls: %d\nAllocations: %d",
 			de_render_get_frame_time(renderer),
 			(int)de_renderer_get_mean_fps(renderer), (int)renderer->current_fps, (int)renderer->min_fps,
-			(int)de_get_alloc_count());
+			(int)renderer->draw_calls, (int)de_get_alloc_count());
 		de_gui_text_set_text_utf8(game->fps_text, buffer);
 	}
 }
@@ -169,8 +169,6 @@ static void game_close(game_t* game)
 
 int main(int argc, char** argv)
 {
-	de_graph_tests();
-
 	DE_UNUSED(argc);
     DE_UNUSED(argv);
 	

@@ -262,6 +262,12 @@
     <ClCompile Include="..\..\DmitrysEngine\core\pathfinder.c">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\math\aabb.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\math\frustum.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\DmitrysEngine\core\array.h">
@@ -526,6 +532,12 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\DmitrysEngine\core\pathfinder.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\math\aabb.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\math\frustum.h">
       <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
