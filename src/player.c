@@ -151,7 +151,7 @@ static void player_init(actor_t* actor)
 	de_node_attach(p->camera, actor->pivot);
 
 	p->flash_light = de_node_create(scene, DE_NODE_TYPE_LIGHT);
-	de_light_set_radius(de_node_to_light(p->flash_light), 2);
+	de_light_set_radius(de_node_to_light(p->flash_light), 0);
 	de_node_attach(p->flash_light, p->camera);
 
 	p->laser_dot = de_node_create(scene, DE_NODE_TYPE_LIGHT);
