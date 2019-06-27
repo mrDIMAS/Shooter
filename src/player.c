@@ -170,10 +170,12 @@ static void player_init(actor_t* actor)
 		snprintf(buf, sizeof(buf), "data/sounds/footsteps/FootStep_shoe_metal_step%d.wav", i + 1);
 		de_path_t path;
 		de_path_from_cstr_as_view(&path, buf);
-		de_resource_t* res = de_core_request_resource(core, DE_RESOURCE_TYPE_SOUND_BUFFER, &path, 0);
-		de_sound_source_t* src = de_sound_source_create(ctx, DE_SOUND_SOURCE_TYPE_3D);
-		de_sound_source_set_buffer(src, de_resource_to_sound_buffer(res));
-		DE_ARRAY_APPEND(p->footsteps, src);
+		de_resource_t* res = de_core_request_resource(core, DE_RESOURCE_TYPE_SOUND_BUFFER, &path);
+		if (res) {
+			de_sound_source_t* src = de_sound_source_create(ctx, DE_SOUND_SOURCE_TYPE_3D);
+			de_sound_source_set_buffer(src, de_resource_to_sound_buffer(res));
+			DE_ARRAY_APPEND(p->footsteps, src);
+		}
 	}
 
 	player_add_weapon(p, weapon_create(level, WEAPON_TYPE_M4));

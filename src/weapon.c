@@ -38,7 +38,7 @@ weapon_t* weapon_create(level_t* level, weapon_type_t type)
 			return NULL;
 	}
 
-	de_resource_t* model_resource = de_core_request_resource(level->game->core, DE_RESOURCE_TYPE_MODEL, &path, 0);
+	de_resource_t* model_resource = de_core_request_resource(level->game->core, DE_RESOURCE_TYPE_MODEL, &path);
 	wpn->model = de_model_instantiate(de_resource_to_model(model_resource), level->scene);
 	/* make sure weapon will not penetrate into walls (in most cases it will be rendered above all 
 	 * other geometry) */

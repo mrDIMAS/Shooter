@@ -54,7 +54,7 @@ projectile_t* projectile_create(level_t* level, projectile_type_t type, const de
 	p->definition = projectile_get_definition(type);
 	de_path_t model_path;
 	de_path_from_cstr_as_view(&model_path, p->definition->model);
-	de_resource_t* res = de_core_request_resource(level->game->core, DE_RESOURCE_TYPE_MODEL, &model_path, 0);
+	de_resource_t* res = de_core_request_resource(level->game->core, DE_RESOURCE_TYPE_MODEL, &model_path);
 	if (res) {
 		de_model_t* model = de_resource_to_model(res);
 		p->model = de_model_instantiate(model, level->scene);				

@@ -72,7 +72,7 @@ hud_t* hud_create(game_t* game)
 			.row = 0, .column = 0,
 			.s.image = (de_gui_image_descriptor_t)
 		{
-			.texture = de_resource_to_texture(de_core_request_resource(game->core, DE_RESOURCE_TYPE_TEXTURE,
+			.texture = de_resource_to_texture(de_core_request_resource_with_flags(game->core, DE_RESOURCE_TYPE_TEXTURE,
 				&crosshair, DE_RESOURCE_FLAG_PERSISTENT))
 		}
 	});

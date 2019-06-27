@@ -26,7 +26,7 @@ static void bot_init(actor_t* actor)
 	bot_t* bot = actor_to_bot(actor);
 	de_path_t path;
 	de_path_from_cstr_as_view(&path, "data/models/soldier/soldier.fbx");
-	de_resource_t* soldier_model = de_core_request_resource(actor->parent_level->game->core, DE_RESOURCE_TYPE_MODEL, &path, 0);
+	de_resource_t* soldier_model = de_core_request_resource(actor->parent_level->game->core, DE_RESOURCE_TYPE_MODEL, &path);
 	if (soldier_model) {
 		bot->model = de_model_instantiate(de_resource_to_model(soldier_model), actor->parent_level->scene);
 		de_node_attach(bot->model, actor->pivot);

@@ -36,18 +36,26 @@ bool game_save(game_t* game)
 	bool result = false;
 	if (game->level) {
 		result = true;
-		de_object_visitor_t visitor;
-		de_object_visitor_init(game->core, &visitor);
-		result &= de_core_visit(&visitor, game->core);
-		result &= DE_OBJECT_VISITOR_VISIT_POINTER(&visitor, "Level", &game->level, level_visit);
-		/* debug output */
+
+		de_core_begin_visit(game->core);
 		{
-			FILE* temp = fopen("save1.txt", "w");
-			de_object_visitor_print_tree(&visitor, temp);
-			fclose(temp);
+			de_object_visitor_t visitor;
+			de_object_visitor_init(game->core, &visitor);
+		
+			result &= de_core_visit(&visitor, game->core);
+			result &= DE_OBJECT_VISITOR_VISIT_POINTER(&visitor, "Level", &game->level, level_visit);
+
+		    /* debug output */
+			{
+				FILE* temp = fopen("save1.txt", "w");
+				de_object_visitor_print_tree(&visitor, temp);
+				fclose(temp);
+			}
+
+			de_object_visitor_save_binary(&visitor, "save1.bin");
+			de_object_visitor_free(&visitor);
 		}
-		de_object_visitor_save_binary(&visitor, "save1.bin");
-		de_object_visitor_free(&visitor);
+		de_core_end_visit(game->core);
 	}
 	return result;
 }
@@ -56,10 +64,22 @@ bool game_load(game_t* game)
 {
 	de_object_visitor_t visitor;
 	bool result = true;
-	de_object_visitor_load_binary(game->core, &visitor, "save1.bin");
-	result &= de_core_visit(&visitor, game->core);
-	result &= DE_OBJECT_VISITOR_VISIT_POINTER(&visitor, "Level", &game->level, level_visit);
-	de_object_visitor_free(&visitor);
+	
+	de_core_begin_visit(game->core);
+	{
+		de_object_visitor_load_binary(game->core, &visitor, "save1.bin");
+
+		if (game->level) {
+			level_free(game->level);
+		}
+
+		result &= de_core_visit(&visitor, game->core);
+		result &= DE_OBJECT_VISITOR_VISIT_POINTER(&visitor, "Level", &game->level, level_visit);
+		
+		de_object_visitor_free(&visitor);
+	}
+	de_core_end_visit(game->core);
+	
 	menu_set_visible(game->main_menu, false);
 	return result;
 }
@@ -170,10 +190,10 @@ static void game_close(game_t* game)
 int main(int argc, char** argv)
 {
 	DE_UNUSED(argc);
-    DE_UNUSED(argv);
-	
+	DE_UNUSED(argv);
+
 	game_t* game = game_create();
-		
+
 	game_main_loop(game);
 
 	game_close(game);

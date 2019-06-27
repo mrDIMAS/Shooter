@@ -268,6 +268,27 @@
     <ClCompile Include="..\..\DmitrysEngine\math\frustum.c">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\math\quat.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\math\mat4.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\math\vec3.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\math\plane.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\math\ray.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\math\vec2.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\math\mat3.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\DmitrysEngine\core\array.h">
@@ -538,6 +559,27 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\DmitrysEngine\math\frustum.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\math\quat.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\math\mat4.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\math\vec3.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\math\plane.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\math\ray.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\math\vec2.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\math\mat3.h">
       <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>

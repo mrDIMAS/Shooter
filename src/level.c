@@ -27,7 +27,7 @@ void level_create_collider(level_t* level)
 		assert(polygon->type == DE_NODE_TYPE_MESH);
 		map_collider = de_scene_create_static_geometry(level->scene);
 		de_node_calculate_transforms_ascending(polygon);
-		de_static_geometry_fill(map_collider, de_node_to_mesh(polygon), polygon->global_matrix);
+		de_static_geometry_fill(map_collider, de_node_to_mesh(polygon), &polygon->global_matrix);
 	}
 }
 
@@ -56,7 +56,7 @@ level_t* level_create_test(game_t* game)
 
 	/* Ripper */
 	de_path_append_cstr(&res_path, "data/models/ripper.fbx");
-	de_resource_t* res = de_core_request_resource(game->core, DE_RESOURCE_TYPE_MODEL, &res_path, 0);
+	de_resource_t* res = de_core_request_resource(game->core, DE_RESOURCE_TYPE_MODEL, &res_path);
 	de_model_t* mdl = de_resource_to_model(res);
 	de_node_t* ripper1 = de_model_instantiate(mdl, level->scene);
 	de_node_set_local_position(ripper1, &(de_vec3_t){ -1, 0, -1 });
@@ -70,7 +70,7 @@ level_t* level_create_test(game_t* game)
 	/* Level */
 	de_path_clear(&res_path);
 	de_path_append_cstr(&res_path, "data/models/map2_bin.fbx");
-	res = de_core_request_resource(game->core, DE_RESOURCE_TYPE_MODEL, &res_path, 0);
+	res = de_core_request_resource(game->core, DE_RESOURCE_TYPE_MODEL, &res_path);
 	de_model_instantiate(de_resource_to_model(res), level->scene);
 
 	level_create_collider(level);
@@ -88,7 +88,7 @@ level_t* level_create_test(game_t* game)
 	de_color_gradient_add_point(gradient, 1.00f, &(de_color_t) { 255, 255, 255, 0 });
 	de_path_clear(&res_path);
 	de_path_append_cstr(&res_path, "data/particles/smoke_04.tga");
-	res = de_core_request_resource(game->core, DE_RESOURCE_TYPE_TEXTURE, &res_path, 0);
+	res = de_core_request_resource(game->core, DE_RESOURCE_TYPE_TEXTURE, &res_path);
 	de_particle_system_set_texture(particle_system, de_resource_to_texture(res));
 	
 	de_path_free(&res_path);
