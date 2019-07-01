@@ -20,9 +20,14 @@
 * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 typedef struct player_controller_t {
-	bool move_forward, move_backward;
-	bool strafe_left, strafe_right;
-	bool crouch, run, jumped;
+	bool move_forward;
+	bool move_backward;
+	bool strafe_left;
+	bool strafe_right;
+	bool crouch;
+	bool jumped;
+	bool run;
+	bool shoot;
 } player_controller_t;
 
 struct player_t {
@@ -33,14 +38,13 @@ struct player_t {
 	float desired_pitch;
 	float yaw;
 	float desired_yaw;
-	float move_speed;
 	float stand_body_radius;
 	float crouch_body_radius;
 	float stand_up_speed;
 	float sit_down_speed;
 	float run_speed_multiplier;
 	float camera_wobble;
-	float path_len;
+	float path_len;	
 	de_vec3_t camera_offset;
 	de_vec3_t camera_dest_offset;
 	de_vec3_t camera_position;

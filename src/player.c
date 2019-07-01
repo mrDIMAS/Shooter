@@ -107,14 +107,12 @@ static bool player_process_event(actor_t* actor, const de_event_t* evt)
 					break;
 			}
 			break;
-		case DE_EVENT_TYPE_MOUSE_DOWN: {
-			if(p->current_weapon < (int)p->weapons.size) {
-				weapon_t* wpn = p->weapons.data[p->current_weapon];
-				DE_UNUSED(wpn);
-
-			}			
+		case DE_EVENT_TYPE_MOUSE_DOWN:
+			p->controller.shoot = true;
+			break;		
+		case DE_EVENT_TYPE_MOUSE_UP: 
+			p->controller.shoot = false;
 			break;
-		}
 		case DE_EVENT_TYPE_MOUSE_WHEEL: {
 			int delta = evt->s.mouse_wheel.delta;
 			if (delta > 0) {
@@ -133,7 +131,7 @@ static bool player_process_event(actor_t* actor, const de_event_t* evt)
 static void player_init(actor_t* actor)
 {
 	player_t* p = &actor->s.player;
-	p->move_speed = 0.028f;
+	actor->move_speed = 0.028f;
 	p->stand_body_radius = 0.5f;
 	p->crouch_body_radius = 0.35f;
 	p->sit_down_speed = 0.045f;
@@ -155,8 +153,10 @@ static void player_init(actor_t* actor)
 	de_node_attach(p->flash_light, p->camera);
 
 	p->laser_dot = de_node_create(scene, DE_NODE_TYPE_LIGHT);
-	de_light_set_radius(de_node_to_light(p->laser_dot), 0.5f);
-	de_light_set_color(de_node_to_light(p->laser_dot), &(de_color_t) { 255, 0, 0, 255 });
+	de_light_t* laser_dot = de_node_to_light(p->laser_dot);
+	de_light_set_radius(laser_dot, 0.5f);
+	de_light_set_color(laser_dot, &(de_color_t) { 255, 0, 0, 255 });
+	de_light_set_cast_shadows(laser_dot, false);
 
 	p->weapon_pivot = de_node_create(scene, DE_NODE_TYPE_BASE);
 	de_node_attach(p->weapon_pivot, p->camera);
@@ -193,8 +193,7 @@ static bool player_visit(de_object_visitor_t* visitor, actor_t* actor)
 	result &= de_object_visitor_visit_float(visitor, "Pitch", &player->pitch);
 	result &= de_object_visitor_visit_float(visitor, "DesiredPitch", &player->desired_pitch);
 	result &= de_object_visitor_visit_float(visitor, "Yaw", &player->yaw);
-	result &= de_object_visitor_visit_float(visitor, "DesiredYaw", &player->desired_yaw);
-	result &= de_object_visitor_visit_float(visitor, "MoveSpeed", &player->move_speed);
+	result &= de_object_visitor_visit_float(visitor, "DesiredYaw", &player->desired_yaw);	
 	result &= de_object_visitor_visit_float(visitor, "StandBodyRadius", &player->stand_body_radius);
 	result &= de_object_visitor_visit_float(visitor, "CrouchBodyRadius", &player->crouch_body_radius);
 	result &= de_object_visitor_visit_float(visitor, "StandUpSpeed", &player->stand_up_speed);
@@ -280,6 +279,15 @@ static void player_update(actor_t* actor)
 		de_body_set_radius(body, radius);
 	}
 
+	for (size_t i = 0; i < p->weapons.size; ++i) {
+		weapon_update(p->weapons.data[i]);
+	}
+
+	if (p->controller.shoot && p->current_weapon < (int)p->weapons.size) {
+		weapon_t* wpn = p->weapons.data[p->current_weapon];
+		weapon_shoot(wpn);
+	}
+
 	/* make sure that camera will be always at the top of the body */
 	p->camera_position.y = de_body_get_radius(body);
 
@@ -324,7 +332,7 @@ static void player_update(actor_t* actor)
 
 	if (de_vec3_sqr_len(&offset) > 0) {
 		de_vec3_normalize(&offset, &offset);
-		de_vec3_scale(&offset, &offset, speed_multiplier * p->move_speed);
+		de_vec3_scale(&offset, &offset, speed_multiplier * actor->move_speed);
 		p->path_len += 0.05f;
 		if (p->path_len >= 1) {
 			de_sound_source_t* src = p->footsteps.data[rand() % p->footsteps.size];

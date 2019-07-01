@@ -24,7 +24,7 @@ static actor_dispatch_table_t* actor_get_dispatch_table_by_type(actor_type_t typ
 	static actor_dispatch_table_t stub;
 	switch (type) {
 		case ACTOR_TYPE_BOT:
-			return &stub;
+			return bot_get_dispatch_table();
 		case ACTOR_TYPE_PLAYER:
 			return player_get_dispatch_table();
 		default:
@@ -39,6 +39,7 @@ actor_t* actor_create(level_t* level, actor_type_t type)
 	actor->type = type;
 	actor->parent_level = level;
 	actor->dispatch_table = actor_get_dispatch_table_by_type(type);
+	actor->move_speed = 0.028f;
 
 	actor->body = de_body_create(level->scene);
 	de_body_set_gravity(actor->body, &(de_vec3_t) {.y = -20 });
@@ -49,6 +50,9 @@ actor_t* actor_create(level_t* level, actor_type_t type)
 	if (actor->dispatch_table->init) {
 		actor->dispatch_table->init(actor);
 	}
+
+	DE_LINKED_LIST_APPEND(level->actors, actor);
+
 	return actor;
 }
 
@@ -58,6 +62,7 @@ void actor_free(actor_t* actor)
 		actor->dispatch_table->deinit(actor);
 	}
 	de_node_free(actor->pivot);
+	DE_LINKED_LIST_REMOVE(actor->parent_level->actors, actor);
 	de_free(actor);
 }
 
@@ -86,8 +91,12 @@ bool actor_visit(de_object_visitor_t* visitor, actor_t* actor)
 	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "Body", &actor->body, de_body_visit);
 	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "Level", &actor->parent_level, level_visit);
 	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "Pivot", &actor->pivot, de_node_visit);
-	if (actor->dispatch_table->visit) {
-		result &= actor->dispatch_table->visit(visitor, actor);
+	result &= de_object_visitor_visit_float(visitor, "MoveSpeed", &actor->move_speed);
+	if (de_object_visitor_enter_node(visitor, "TypeSpecific")) {
+		if (actor->dispatch_table->visit) {
+			result &= actor->dispatch_table->visit(visitor, actor);
+		}
+		de_object_visitor_leave_node(visitor);
 	}
 	return result;
 }

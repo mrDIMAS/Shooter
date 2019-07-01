@@ -25,17 +25,18 @@ typedef enum actor_type_t {
 	ACTOR_TYPE_FORCE_SIZE = INT32_MAX,
 } actor_type_t;
 
-
 struct actor_t {
 	actor_type_t type;
 	actor_dispatch_table_t* dispatch_table;
 	level_t* parent_level;
 	de_body_t* body;
 	de_node_t* pivot;
+	float move_speed;
 	union {
 		player_t player;
 		bot_t bot;
 	}s;
+	DE_LINKED_LIST_ITEM(actor_t);
 };
 
 actor_t* actor_create(level_t* level, actor_type_t type);

@@ -37,7 +37,8 @@ bool level_visit(de_object_visitor_t* visitor, level_t* level)
 	if (visitor->is_reading) {
 		level->game = de_core_get_user_pointer(visitor->core);
 	}
-	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "Scene", &level->scene, de_scene_visit);
+	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "Scene", &level->scene, de_scene_visit);	
+	result &= DE_OBJECT_VISITOR_VISIT_INTRUSIVE_LINKED_LIST(visitor, "Actors", level->actors, actor_t, actor_visit);
 	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "Player", &level->player, actor_visit);
 	if (visitor->is_reading) {
 		level_create_collider(level);
@@ -53,6 +54,8 @@ level_t* level_create_test(game_t* game)
 
 	de_path_t res_path;
 	de_path_init(&res_path);
+
+	actor_create(level, ACTOR_TYPE_BOT);
 
 	/* Ripper */
 	de_path_append_cstr(&res_path, "data/models/ripper.fbx");
@@ -79,7 +82,7 @@ level_t* level_create_test(game_t* game)
 	de_particle_system_t* particle_system = de_node_to_particle_system(particle_system_node);
 	de_particle_system_emitter_t* emitter = de_particle_system_emitter_create(particle_system, DE_PARTICLE_SYSTEM_EMITTER_TYPE_SPHERE);
 	emitter->max_particles = 1000;
-	emitter->particle_spawn_rate = 50;	
+	emitter->particle_spawn_rate = 50;
 	particle_system->acceleration.y = -0.1f;
 	de_color_gradient_t* gradient = de_particle_system_get_color_gradient_over_lifetime(particle_system);
 	de_color_gradient_add_point(gradient, 0.00f, &(de_color_t) { 150, 150, 150, 0 });
@@ -90,7 +93,7 @@ level_t* level_create_test(game_t* game)
 	de_path_append_cstr(&res_path, "data/particles/smoke_04.tga");
 	res = de_core_request_resource(game->core, DE_RESOURCE_TYPE_TEXTURE, &res_path);
 	de_particle_system_set_texture(particle_system, de_resource_to_texture(res));
-	
+
 	de_path_free(&res_path);
 
 	level->player = actor_create(level, ACTOR_TYPE_PLAYER);
@@ -106,9 +109,11 @@ level_t* level_create_test(game_t* game)
 
 void level_update(level_t* level)
 {
-	actor_update(level->player);
-	DE_LINKED_LIST_FOR_EACH_T(projectile_t*, projectile, level->projectiles)
-	{
+	for (actor_t* actor = level->actors.head; actor; actor = actor->next) {
+		actor_update(actor);
+	}
+
+	for (projectile_t* projectile = level->projectiles.head; projectile; projectile = projectile->next) {
 		projectile_update(projectile);
 	}
 }

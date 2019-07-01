@@ -28,6 +28,10 @@ typedef enum weapon_type_t {
 struct weapon_t {
 	weapon_type_t type;
 	de_node_t* model;
+	level_t* level;	 
+	de_vec3_t offset;
+	de_vec3_t dest_offset;
+	double last_shot_time;
 };
 
 weapon_t* weapon_create(level_t* level, weapon_type_t type);

@@ -121,12 +121,13 @@ static void game_main_loop(game_t* game)
 	de_gui_t* gui = de_core_get_gui(game->core);
 	const double fixed_fps = 60.0;
 	const double fixed_timestep = 1.0f / fixed_fps;
-	double game_clock = de_time_get_seconds();
+	game->time.seconds = de_time_get_seconds();
+	game->time.delta = fixed_timestep;
 	while (de_core_is_running(game->core)) {
-		double dt = de_time_get_seconds() - game_clock;
+		double dt = de_time_get_seconds() - game->time.seconds;
 		while (dt >= fixed_timestep) {
 			dt -= fixed_timestep;
-			game_clock += fixed_timestep;
+			game->time.seconds += fixed_timestep;
 
 			de_event_t evt;
 			while (de_core_poll_event(game->core, &evt)) {
@@ -155,7 +156,7 @@ static void game_main_loop(game_t* game)
 			}
 
 			if (dt >= 4 * fixed_timestep) {
-				game_clock = de_time_get_seconds();
+				game->time.seconds = de_time_get_seconds();
 				break;
 			}
 		}

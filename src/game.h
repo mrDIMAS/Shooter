@@ -31,12 +31,18 @@ typedef struct bot_t bot_t;
 typedef struct actor_t actor_t;
 typedef struct hud_t hud_t;
 
+typedef struct game_time_t {
+	double seconds; /* Time from start. */
+	double delta; /* Time since last update tick. */
+} game_time_t;
+
 struct game_t {
 	de_core_t* core;
 	level_t* level;
 	menu_t* main_menu;
 	hud_t* hud;
 	de_gui_node_t* fps_text;
+	game_time_t time;
 };
 
 bool game_save(game_t* game);
