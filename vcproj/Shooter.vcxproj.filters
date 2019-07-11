@@ -289,6 +289,9 @@
     <ClCompile Include="..\..\DmitrysEngine\math\mat3.c">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\gui\stack_panel.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\DmitrysEngine\core\array.h">
@@ -580,6 +583,9 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\DmitrysEngine\math\mat3.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\gui\stack_panel.h">
       <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>

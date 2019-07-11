@@ -136,21 +136,87 @@ static void settings_page_init(menu_t* menu, settings_page_t* page)
 	/* Fucking Visual Studio keep messing up formatting here >:(
 	 * I'm too fucking tired to fix it every time. */
 
-	de_gui_node_t* grid = de_gui_node_create_with_desc(gui, DE_GUI_NODE_GRID, &(de_gui_node_descriptor_t) {
-		.margin = (de_gui_thickness_t) { .left = 5, .top = 5, .right = 5, .bottom = 5 },
-			.s.grid = (de_gui_grid_descriptor_t)
-		{
-			.rows[0] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
-				.rows[1] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
-				.rows[2] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
-				.rows[3] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
-				.rows[4] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
-				.rows[5] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
-				.rows[6] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
-				.rows[7] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
+	de_gui_node_t* page_grid = de_gui_node_create_with_desc(gui, DE_GUI_NODE_GRID, &(de_gui_node_descriptor_t) {
+		.margin = (de_gui_thickness_t) { 
+			.left = 5,
+			.top = 5,
+			.right = 5,
+			.bottom = 5 
+		}, 
+		.s.grid = (de_gui_grid_descriptor_t) {
+			.rows[0] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
+			.rows[1] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
+						
+			.columns[0] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
+		}
+	});
 
-				.columns[0] = { .desired_width = 140, .size_mode = DE_GUI_SIZE_MODE_STRICT },
-				.columns[1] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
+	de_gui_node_t* stack_panel = de_gui_node_create_with_desc(gui, DE_GUI_NODE_STACK_PANEL, &(de_gui_node_descriptor_t) {
+		.margin = (de_gui_thickness_t) { 
+			.left = 2,
+			.top = 2,
+			.right = 2,
+			.bottom = 2
+		},  
+		.row = 1,
+		.column = 0,
+		.horizontal_alignment = DE_GUI_HORIZONTAL_ALIGNMENT_RIGHT,
+		.parent = page_grid,
+		.s.stack_panel = (de_gui_stack_panel_descriptor_t) {
+			.orientation = DE_GUI_ORIENTATION_HORIZONTAL
+		}
+	});
+
+	de_gui_node_create_with_desc(gui, DE_GUI_NODE_BUTTON, &(de_gui_node_descriptor_t) {
+		.margin = (de_gui_thickness_t) {
+			.left = 2,
+			.top = 2,
+			.right = 2,
+			.bottom = 2
+		},
+		.width = 100,
+		.parent = stack_panel,
+		.s.button = (de_gui_button_descriptor_t) {
+			.text = "Back"
+		}
+	});
+		
+	de_gui_node_create_with_desc(gui, DE_GUI_NODE_BUTTON, &(de_gui_node_descriptor_t) {
+		.margin = (de_gui_thickness_t) {
+			.left = 2,
+			.top = 2,
+			.right = 2,
+			.bottom = 2
+		},
+		.width = 100,
+		.parent = stack_panel,
+		.s.button = (de_gui_button_descriptor_t) {
+			.text = "Apply"
+		}
+	});
+
+	de_gui_node_t* grid = de_gui_node_create_with_desc(gui, DE_GUI_NODE_GRID, &(de_gui_node_descriptor_t) {
+		.margin = (de_gui_thickness_t) { 
+			.left = 5,
+			.top = 5,
+			.right = 5,
+			.bottom = 5 
+		}, 
+		.row = 0,
+		.column = 0,
+		.parent = page_grid,
+		.s.grid = (de_gui_grid_descriptor_t) {
+			.rows[0] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
+			.rows[1] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
+			.rows[2] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
+			.rows[3] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
+			.rows[4] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
+			.rows[5] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
+			.rows[6] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
+			.rows[7] = { .desired_height = 40, .size_mode = DE_GUI_SIZE_MODE_STRICT },
+
+			.columns[0] = { .desired_width = 140, .size_mode = DE_GUI_SIZE_MODE_STRICT },
+			.columns[1] = { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
 		}
 	});
 
@@ -158,13 +224,12 @@ static void settings_page_init(menu_t* menu, settings_page_t* page)
 	{
 		de_gui_node_create_with_desc(gui, DE_GUI_NODE_TEXT, &(de_gui_node_descriptor_t) {
 			.row = 0,
-				.column = 0,
-				.parent = grid,
-				.margin = (de_gui_thickness_t) { .left = 5 },
-				.s.text_block = (de_gui_text_descriptor_t)
-			{
+			.column = 0,
+			.parent = grid,
+			.margin = (de_gui_thickness_t) { .left = 5 },
+			.s.text_block = (de_gui_text_descriptor_t) {
 				.text = "Video Mode",
-					.vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_CENTER,
+				.vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_CENTER,
 			}
 		});
 
@@ -388,7 +453,7 @@ static void settings_page_init(menu_t* menu, settings_page_t* page)
 		});
 	}
 
-	de_gui_window_set_content(page->window, grid);
+	de_gui_window_set_content(page->window, page_grid);
 }
 
 static void settings_page_deinit(settings_page_t* page)
