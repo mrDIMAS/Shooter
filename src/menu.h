@@ -34,6 +34,11 @@ typedef struct settings_page_t {
 	de_video_mode_array_t video_modes;
 } settings_page_t;
 
+typedef struct game_settings_t {
+	de_renderer_quality_settings_t renderer_settings;
+	de_video_mode_t video_mode;
+} game_settings_t;
+
 struct menu_t {
 	de_gui_node_t* root;
 	de_sound_source_t* music;
@@ -42,6 +47,7 @@ struct menu_t {
 	settings_page_t settings_page;
 	menu_page_type_t page;
 	bool visible;
+	game_settings_t settings;
 };
 
 menu_t* menu_create(game_t* game);

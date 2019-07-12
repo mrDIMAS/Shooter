@@ -24,39 +24,39 @@ hud_t* hud_create(game_t* game)
 	hud_t* hud = DE_NEW(hud_t);
 	de_gui_t* gui = de_core_get_gui(game->core);
 	hud->game = game;
+
+	de_video_mode_t current_video_mode = de_core_get_current_video_mode(game->core);
+
 	hud->root = de_gui_node_create_with_desc(gui, DE_GUI_NODE_GRID, &(de_gui_node_descriptor_t) {
-		.width = (float)de_core_get_window_width(game->core),
-			.height = (float)de_core_get_window_height(game->core),
-			.visibility = DE_GUI_NODE_VISIBILITY_COLLAPSED,
-			.s.grid = (de_gui_grid_descriptor_t)
-		{
+		.width = (float)current_video_mode.width,
+		.height = (float)current_video_mode.height,
+		.visibility = DE_GUI_NODE_VISIBILITY_COLLAPSED,
+		.s.grid = (de_gui_grid_descriptor_t) {
 			.columns[0] = (de_gui_grid_column_descriptor_t) { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
-				.rows[0] = (de_gui_grid_row_descriptor_t) { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
+			.rows[0] = (de_gui_grid_row_descriptor_t) { .size_mode = DE_GUI_SIZE_MODE_STRETCH },
 		}
 	});
 
 	de_gui_node_create_with_desc(gui, DE_GUI_NODE_TEXT, &(de_gui_node_descriptor_t) {
 		.parent = hud->root,
-			.vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_BOTTOM,
-			.horizontal_alignment = DE_GUI_HORIZONTAL_ALIGNMENT_LEFT,
-			.width = 100,
-			.height = 30,
-			.row = 0, .column = 0,
-			.s.text_block = (de_gui_text_descriptor_t)
-		{
+		.vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_BOTTOM,
+		.horizontal_alignment = DE_GUI_HORIZONTAL_ALIGNMENT_LEFT,
+		.width = 100,
+		.height = 30,
+		.row = 0, .column = 0,
+		.s.text_block = (de_gui_text_descriptor_t) {
 			.text = "Health"
 		}
 	});
 
 	de_gui_node_create_with_desc(gui, DE_GUI_NODE_TEXT, &(de_gui_node_descriptor_t) {
 		.parent = hud->root,
-			.vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_BOTTOM,
-			.horizontal_alignment = DE_GUI_HORIZONTAL_ALIGNMENT_RIGHT,
-			.width = 100,
-			.height = 30,
-			.row = 0, .column = 0,
-			.s.text_block = (de_gui_text_descriptor_t)
-		{
+		.vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_BOTTOM,
+		.horizontal_alignment = DE_GUI_HORIZONTAL_ALIGNMENT_RIGHT,
+		.width = 100,
+		.height = 30,
+		.row = 0, .column = 0,
+		.s.text_block = (de_gui_text_descriptor_t) {
 			.text = "Ammo"
 		}
 	});
@@ -65,13 +65,12 @@ hud_t* hud_create(game_t* game)
 	de_path_from_cstr_as_view(&crosshair, "data/textures/crosshair.tga");
 	de_gui_node_create_with_desc(gui, DE_GUI_NODE_IMAGE, &(de_gui_node_descriptor_t) {
 		.parent = hud->root,
-			.vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_CENTER,
-			.horizontal_alignment = DE_GUI_HORIZONTAL_ALIGNMENT_CENTER,
-			.width = 33,
-			.height = 33,
-			.row = 0, .column = 0,
-			.s.image = (de_gui_image_descriptor_t)
-		{
+		.vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_CENTER,
+		.horizontal_alignment = DE_GUI_HORIZONTAL_ALIGNMENT_CENTER,
+		.width = 33,
+		.height = 33,
+		.row = 0, .column = 0,
+		.s.image = (de_gui_image_descriptor_t) {
 			.texture = de_resource_to_texture(de_core_request_resource_with_flags(game->core, DE_RESOURCE_TYPE_TEXTURE,
 				&crosshair, DE_RESOURCE_FLAG_PERSISTENT))
 		}
