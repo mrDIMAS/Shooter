@@ -66,6 +66,18 @@ void actor_free(actor_t* actor)
 	de_free(actor);
 }
 
+bool actor_has_ground_contact(actor_t* actor)
+{
+	const size_t contact_count = de_body_get_contact_count(actor->body);
+	for (size_t k = 0; k < contact_count; ++k) {
+		de_contact_t* contact = de_body_get_contact(actor->body, k);
+		if (contact->normal.y > 0.7f) {
+			return true;			
+		}
+	}
+	return false;
+}
+
 void actor_update(actor_t* actor)
 {
 	if (actor->dispatch_table->update) {

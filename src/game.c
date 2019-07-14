@@ -28,6 +28,7 @@
 #include "menu.c"
 #include "bot.c"
 #include "actor.c"
+#include "footstep_sound_map.c"
 #include "hud.c"
 #include "projectile.c"
 

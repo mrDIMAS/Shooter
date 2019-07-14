@@ -29,6 +29,8 @@ struct weapon_t {
 	weapon_type_t type;
 	de_node_t* model;
 	level_t* level;	 
+	de_node_t* shot_light;
+	float shot_light_radius;
 	de_vec3_t offset;
 	de_vec3_t dest_offset;
 	double last_shot_time;

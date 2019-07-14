@@ -19,6 +19,10 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
+#define JUMP_PAD_TAG "JumpPad"
+#define JUMP_PAD_BEGIN_TAG "_Begin"
+#define JUMP_PAD_END_TAG "_End"
+
 void level_create_collider(level_t* level)
 {
 	de_node_t* polygon = de_scene_find_node(level->scene, "Polygon");
@@ -31,17 +35,97 @@ void level_create_collider(level_t* level)
 	}
 }
 
+jump_pad_t* jump_pad_create(level_t* level, de_node_t* model, de_vec3_t force)
+{
+	jump_pad_t* pad = DE_NEW(jump_pad_t);
+	pad->level = level;
+	pad->model = model;
+	pad->force = force;
+	pad->bounds = de_scene_create_static_geometry(level->scene);
+
+	de_mat4_t transform;
+	de_node_get_global_transform(model, &transform);
+	de_static_geometry_fill(pad->bounds, de_node_to_mesh(model), &transform);
+
+	DE_ARRAY_APPEND(level->jump_pads, pad);
+	return pad;
+}
+
+void jump_pad_free(jump_pad_t* pad)
+{
+	DE_ARRAY_REMOVE(pad->level->jump_pads, pad);
+	de_free(pad);
+}
+
+void jump_pad_update(jump_pad_t* pad)
+{
+	level_t* level = pad->level;
+	for (actor_t* actor = level->actors.head; actor; actor = actor->next) {
+		de_body_t* body = actor->body;
+		for (size_t i = 0; i < de_body_get_contact_count(body); ++i) {
+			const de_contact_t* contact = de_body_get_contact(body, i);
+			if (contact->geometry == pad->bounds) {
+				de_body_set_velocity(body, &pad->force);
+				break;
+			}
+		}
+	}
+}
+
+/**
+ * @brief Until we have built-in editor we'll prepare level by scanning level's scene
+ * and search for nodes with special names and creating appropriate game objects
+ * from them.
+ */
+void level_scan_scene(level_t* level)
+{
+	char fmt_buf[1024];
+	for (de_node_t* node = de_scene_get_first_node(level->scene); node; node = de_node_get_next(node)) {
+		const char* name = de_node_get_name(node);
+		if (name && strstr(name, JUMP_PAD_TAG)) {
+			const char* separator = strchr(name, '_');
+			if (!separator) {
+				snprintf(fmt_buf, sizeof(fmt_buf), "%s%s", name, JUMP_PAD_BEGIN_TAG);
+				de_node_t* begin = de_scene_find_node(level->scene, fmt_buf);
+
+				snprintf(fmt_buf, sizeof(fmt_buf), "%s%s", name, JUMP_PAD_END_TAG);
+				de_node_t* end = de_scene_find_node(level->scene, fmt_buf);
+
+				if (begin && end) {
+					de_vec3_t begin_pos;
+					de_node_get_global_position(begin, &begin_pos);
+
+					de_vec3_t end_pos;
+					de_node_get_global_position(end, &end_pos);
+
+					de_vec3_t force;
+					de_vec3_sub(&force, &end_pos, &begin_pos);
+
+					float length;
+					de_vec3_normalize_ex(&force, &force, &length);
+					
+					de_vec3_scale(&force, &force, length / 20.0f);
+
+					jump_pad_create(level, node, force);
+				}
+			}
+		}
+	}
+}
+
 bool level_visit(de_object_visitor_t* visitor, level_t* level)
 {
 	bool result = true;
 	if (visitor->is_reading) {
 		level->game = de_core_get_user_pointer(visitor->core);
 	}
-	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "Scene", &level->scene, de_scene_visit);	
+	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "Scene", &level->scene, de_scene_visit);
 	result &= DE_OBJECT_VISITOR_VISIT_INTRUSIVE_LINKED_LIST(visitor, "Actors", level->actors, actor_t, actor_visit);
+
 	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "Player", &level->player, actor_visit);
 	if (visitor->is_reading) {
 		level_create_collider(level);
+		level_scan_scene(level);
 	}
 	return result;
 }
@@ -51,11 +135,13 @@ level_t* level_create_test(game_t* game)
 	level_t* level = DE_NEW(level_t);
 	level->game = game;
 	level->scene = de_scene_create(game->core);
+	footstep_sound_map_read(game->core, &level->footstep_sound_map);
 
 	de_path_t res_path;
 	de_path_init(&res_path);
 
-	actor_create(level, ACTOR_TYPE_BOT);
+	actor_t* bot = actor_create(level, ACTOR_TYPE_BOT);
+	actor_set_position(bot, &(de_vec3_t){-1.0, 0.0, -1.0});
 
 	/* Ripper */
 	de_path_append_cstr(&res_path, "data/models/ripper.fbx");
@@ -72,11 +158,13 @@ level_t* level_create_test(game_t* game)
 
 	/* Level */
 	de_path_clear(&res_path);
-	de_path_append_cstr(&res_path, "data/models/map2_bin.fbx");
+	de_path_append_cstr(&res_path, "data/models/dm6.fbx");
 	res = de_core_request_resource(game->core, DE_RESOURCE_TYPE_MODEL, &res_path);
 	de_model_instantiate(de_resource_to_model(res), level->scene);
 
 	level_create_collider(level);
+
+	level_scan_scene(level);
 
 	de_node_t* particle_system_node = de_node_create(level->scene, DE_NODE_TYPE_PARTICLE_SYSTEM);
 	de_particle_system_t* particle_system = de_node_to_particle_system(particle_system_node);
@@ -116,10 +204,18 @@ void level_update(level_t* level)
 	for (projectile_t* projectile = level->projectiles.head; projectile; projectile = projectile->next) {
 		projectile_update(projectile);
 	}
+
+	for (size_t i = 0; i < level->jump_pads.size; ++i) {
+		jump_pad_update(level->jump_pads.data[i]);
+	}
 }
 
 void level_free(level_t* level)
 {
+	while (level->jump_pads.size) {
+		jump_pad_free(DE_ARRAY_LAST(level->jump_pads));
+	}
+	footstep_sound_map_free(&level->footstep_sound_map);
 	actor_free(level->player);
 	de_scene_free(level->scene);
 	de_free(level);

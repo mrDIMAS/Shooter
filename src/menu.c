@@ -56,6 +56,7 @@ void menu_set_visible(menu_t* menu, bool visibility)
 {
 	de_gui_node_set_visibility(menu->main_page.window, visibility ? DE_GUI_NODE_VISIBILITY_VISIBLE : DE_GUI_NODE_VISIBILITY_COLLAPSED);
 	menu->visible = visibility;
+	hud_set_visible(menu->game->hud, !menu->visible);
 }
 
 static void menu_on_new_game_click(de_gui_node_t* node, void* user_data)
@@ -111,6 +112,9 @@ static void settings_page_back_click(de_gui_node_t* node, void* user_data)
 	game_settings_t* settings = &settings_page->menu->settings;
 	settings->renderer_settings = de_renderer_get_quality_settings(renderer);
 	settings->video_mode = de_core_get_current_video_mode(core);
+
+	/* sync ui */
+	//de_gui_scroll_bar_set_value(settings_page->sb_music_volume, settings->renderer_settings
 }
 
 static void settings_page_apply_click(de_gui_node_t* node, void* user_data)
@@ -251,7 +255,7 @@ static void settings_page_init(menu_t* menu, settings_page_t* page)
 			.right = 2,
 			.bottom = 2
 		},
-		.width = 100,
+		.width = 110,
 		.parent = stack_panel,		
 		.s.button = (de_gui_button_descriptor_t) {
 			.text = "Back",
@@ -269,7 +273,7 @@ static void settings_page_init(menu_t* menu, settings_page_t* page)
 			.right = 2,
 			.bottom = 2
 		},
-		.width = 100,		
+		.width = 110,		
 		.parent = stack_panel,
 		.s.button = (de_gui_button_descriptor_t) {
 			.text = "Apply",
@@ -321,17 +325,17 @@ static void settings_page_init(menu_t* menu, settings_page_t* page)
 			}
 		});
 
-		de_gui_node_t* selector = de_gui_node_create(gui, DE_GUI_NODE_SLIDE_SELECTOR);
-		de_gui_slide_selector_set_selection_changed(selector, videomode_selector_on_selection_changed);
-		page->video_modes = de_enum_video_modes();
-		de_gui_slide_selector_set_items(selector, page->video_modes.data, page->video_modes.size, videomode_selector_item_getter);
-
 		de_video_mode_t video_mode = de_core_get_current_video_mode(core);
-		
+
 		char buf[512];
 		snprintf(buf, sizeof(buf), "%dx%d", video_mode.width, video_mode.height);
-		de_gui_slide_selector_override_selection_text(selector, buf);
-		de_gui_node_apply_descriptor(selector, &(de_gui_node_descriptor_t) {
+		page->video_modes = de_enum_video_modes();
+
+		page->ss_video_mode = de_gui_node_create(gui, DE_GUI_NODE_SLIDE_SELECTOR);
+		de_gui_slide_selector_set_selection_changed(page->ss_video_mode, videomode_selector_on_selection_changed);
+		de_gui_slide_selector_set_items(page->ss_video_mode, page->video_modes.data, page->video_modes.size, videomode_selector_item_getter);
+		de_gui_slide_selector_override_selection_text(page->ss_video_mode, buf);
+		de_gui_node_apply_descriptor(page->ss_video_mode, &(de_gui_node_descriptor_t) {
 			.row = 0,
 			.column = 1,
 			.parent = grid,
@@ -438,18 +442,17 @@ static void settings_page_init(menu_t* menu, settings_page_t* page)
 			}
 		});
 
-		de_gui_node_t* selector = de_gui_node_create(gui, DE_GUI_NODE_SLIDE_SELECTOR);
-		de_gui_slide_selector_set_selection_changed(selector, shadows_size_selector_on_selection_changed);
-
 		static shadow_size_definition_t options[] = {
 			{ .type = SHADOWS_SIZE_DEFINITION_SMALL, .size = 256, .description = "Small" },
 			{ .type = SHADOWS_SIZE_DEFINITION_MEDIUM, .size = 512, .description = "Medium" },
 			{ .type = SHADOWS_SIZE_DEFINITION_LARGE, .size = 1024, .description = "Large" },
 			{ .type = SHADOWS_SIZE_DEFINITION_HUGE, .size = 2048, .description = "Huge" }
 		};
-				
-		de_gui_slide_selector_set_items(selector, &options, DE_ARRAY_SIZE(options), shadows_size_selector_selector_item_getter);		
-		de_gui_node_apply_descriptor(selector, &(de_gui_node_descriptor_t) {
+
+		page->ss_shadows_size = de_gui_node_create(gui, DE_GUI_NODE_SLIDE_SELECTOR);
+		de_gui_slide_selector_set_selection_changed(page->ss_shadows_size, shadows_size_selector_on_selection_changed);
+		de_gui_slide_selector_set_items(page->ss_shadows_size, &options, DE_ARRAY_SIZE(options), shadows_size_selector_selector_item_getter);
+		de_gui_node_apply_descriptor(page->ss_shadows_size, &(de_gui_node_descriptor_t) {
 			.row = 4,
 			.column = 1,
 			.parent = grid,
@@ -470,19 +473,18 @@ static void settings_page_init(menu_t* menu, settings_page_t* page)
 				.vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_CENTER,
 			}
 		});
-
-		de_gui_node_t* selector = de_gui_node_create(gui, DE_GUI_NODE_SLIDE_SELECTOR);
-		de_gui_slide_selector_set_selection_changed(selector, shadows_distance_selector_on_selection_changed);
-
+		
 		static shadow_distance_definition_t options[] = {
 			{ .type = SHADOWS_DISTANCE_DEFINITION_CLOSE, .distance = 5.0, .description = "Close" },
 			{ .type = SHADOWS_DISTANCE_DEFINITION_MEDIUM, .distance = 10.0, .description = "Medium" },
 			{ .type = SHADOWS_DISTANCE_DEFINITION_FAR, .distance = 30.0, .description = "Far" },
 			{ .type = SHADOWS_DISTANCE_DEFINITION_UNLIMITED, .distance = 999.0, .description = "Unlimited" },
 		};
-				
-		de_gui_slide_selector_set_items(selector, &options, DE_ARRAY_SIZE(options), shadows_distance_selector_selector_item_getter);		
-		de_gui_node_apply_descriptor(selector, &(de_gui_node_descriptor_t) {
+
+		page->ss_shadows_distance = de_gui_node_create(gui, DE_GUI_NODE_SLIDE_SELECTOR);
+		de_gui_slide_selector_set_selection_changed(page->ss_shadows_distance, shadows_distance_selector_on_selection_changed);
+		de_gui_slide_selector_set_items(page->ss_shadows_distance, &options, DE_ARRAY_SIZE(options), shadows_distance_selector_selector_item_getter);
+		de_gui_node_apply_descriptor(page->ss_shadows_distance, &(de_gui_node_descriptor_t) {
 			.row = 5,
 			.column = 1,
 			.parent = grid,
@@ -526,7 +528,7 @@ static void settings_page_init(menu_t* menu, settings_page_t* page)
 			}
 		});
 
-		de_gui_node_create_with_desc(gui, DE_GUI_NODE_SCROLL_BAR, &(de_gui_node_descriptor_t) {
+		page->sb_sound_volume = de_gui_node_create_with_desc(gui, DE_GUI_NODE_SCROLL_BAR, &(de_gui_node_descriptor_t) {
 			.row = 7,
 			.column = 1,
 			.parent = grid,
@@ -555,7 +557,7 @@ static void settings_page_init(menu_t* menu, settings_page_t* page)
 			}
 		});
 
-		de_gui_node_create_with_desc(gui, DE_GUI_NODE_SCROLL_BAR, &(de_gui_node_descriptor_t) {
+		page->sb_music_volume = de_gui_node_create_with_desc(gui, DE_GUI_NODE_SCROLL_BAR, &(de_gui_node_descriptor_t) {
 			.row = 8,
 			.column = 1,
 			.parent = grid,
@@ -729,6 +731,7 @@ menu_t* menu_create(game_t* game)
 		de_sound_buffer_set_flags(buffer, DE_SOUND_BUFFER_FLAGS_STREAM);
 		menu->music = de_sound_source_create(de_core_get_sound_context(game->core), DE_SOUND_SOURCE_TYPE_2D);
 		de_sound_source_set_loop(menu->music, true);
+		de_sound_source_set_volume(menu->music, 0.05f);
 		de_sound_source_set_buffer(menu->music, de_resource_to_sound_buffer(res));
 		de_sound_source_play(menu->music);
 	}
@@ -750,8 +753,7 @@ bool menu_process_event(menu_t* menu, de_event_t* evt)
 					menu_set_page(menu, MENU_PAGE_TYPE_MAIN);
 				} else {
 					if (menu->game->level) {
-						menu_set_visible(menu, !menu->visible);
-						hud_set_visible(menu->game->hud, !menu->visible);
+						menu_set_visible(menu, !menu->visible);						
 					} else {
 						menu_set_visible(menu, true);
 					}

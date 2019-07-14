@@ -53,6 +53,8 @@ void actor_set_position(actor_t* actor, const de_vec3_t* pos);
 
 player_t* actor_to_player(actor_t* actor);
 
+bool actor_has_ground_contact(actor_t* actor);
+
 actor_t* actor_from_player(player_t* player);
 
 bot_t* actor_to_bot(actor_t* actor);

@@ -34,6 +34,7 @@ struct player_t {
 	de_node_t* camera;
 	de_node_t* flash_light;
 	de_node_t* weapon_pivot;
+	bool is_crouch;
 	float pitch;
 	float desired_pitch;
 	float yaw;
@@ -54,7 +55,6 @@ struct player_t {
 	int current_weapon;
 	DE_ARRAY_DECLARE(weapon_t*, weapons);
 	player_controller_t controller;
-	DE_ARRAY_DECLARE(de_sound_source_t*, footsteps);
 	de_node_t* laser_dot;
 };
 

@@ -21,7 +21,7 @@
 
 static void bot_init(actor_t* actor)
 {
-	actor->move_speed = 0.019f;
+	actor->move_speed = 0.015f;
 	bot_t* bot = actor_to_bot(actor);
 	de_path_t path;
 	de_path_from_cstr_as_view(&path, "data/models/soldier/soldier.fbx");
@@ -29,7 +29,7 @@ static void bot_init(actor_t* actor)
 	if (soldier_model) {
 		bot->model = de_model_instantiate(de_resource_to_model(soldier_model), actor->parent_level->scene);
 		de_node_attach(bot->model, actor->pivot);
-		de_body_set_radius(actor->body, 0.3f);
+		de_body_set_radius(actor->body, 0.25f);
 	}
 }
 

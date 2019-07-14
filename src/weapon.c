@@ -41,6 +41,12 @@ weapon_t* weapon_create(level_t* level, weapon_type_t type)
 
 	de_resource_t* model_resource = de_core_request_resource(level->game->core, DE_RESOURCE_TYPE_MODEL, &path);
 	wpn->model = de_model_instantiate(de_resource_to_model(model_resource), level->scene);
+
+	wpn->shot_light = de_node_create(level->scene, DE_NODE_TYPE_LIGHT);
+	de_light_t* shot_light = de_node_to_light(wpn->shot_light);
+	de_light_set_radius(shot_light, 0.0);
+	de_node_attach(wpn->shot_light, wpn->model);
+
 	/* make sure weapon will not penetrate into walls (in most cases it will be rendered above all
 	 * other geometry) */
 	 //de_node_set_depth_hack(wpn->model, 0.1f);
@@ -65,6 +71,15 @@ void weapon_update(weapon_t* wpn)
 	wpn->offset.z += (wpn->dest_offset.z - wpn->offset.z) * 0.1f;
 
 	de_node_set_local_position(wpn->model, &wpn->offset);
+
+	de_light_t* shot_light = de_node_to_light(wpn->shot_light);
+	de_light_set_radius(shot_light, wpn->shot_light_radius);
+	de_light_set_color(shot_light, &(de_color_t){.r = 255, .g = 207, .b = 168});
+
+	wpn->shot_light_radius -= 0.45f;
+	if (wpn->shot_light_radius < 0.0f) {
+		wpn->shot_light_radius = 0.0f;
+	}
 }
 
 bool weapon_visit(de_object_visitor_t* visitor, weapon_t* wpn)
@@ -72,7 +87,8 @@ bool weapon_visit(de_object_visitor_t* visitor, weapon_t* wpn)
 	bool result = true;
 	result &= de_object_visitor_visit_int32(visitor, "Type", (int32_t*)&wpn->type);
 	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "Level", &wpn->level, level_visit);
-	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "Model", &wpn->model, de_node_visit);	
+	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "Model", &wpn->model, de_node_visit);
+	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "ShotLight", &wpn->shot_light, de_node_visit);
 	return result;
 }
 
@@ -103,6 +119,9 @@ void weapon_shoot(weapon_t* wpn)
 		if (de_ray_cast_closest(wpn->level->scene, &ray, DE_RAY_CAST_FLAGS_IGNORE_BODY_IN_RAY, &result)) {
 
 		}
+
+		wpn->shot_light_radius = 4.0f;
+
 		wpn->last_shot_time = game->time.seconds;
 	}
 }

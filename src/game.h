@@ -58,6 +58,7 @@ typedef struct actor_dispatch_table_t {
 	bool(*process_event)(actor_t* actor, const de_event_t* evt);
 } actor_dispatch_table_t;
 
+#include "footstep_sound_map.h"
 #include "level.h"
 #include "weapon.h"
 #include "player.h"

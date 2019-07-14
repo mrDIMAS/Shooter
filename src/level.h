@@ -19,10 +19,19 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
+typedef struct jump_pad_t {
+	level_t* level;
+	de_node_t* model;
+	de_vec3_t force;
+	de_static_geometry_t* bounds;
+} jump_pad_t;
+
 struct level_t {
 	game_t* game;
 	de_scene_t* scene;
 	actor_t* player;
+	footstep_sound_map_t footstep_sound_map;
+	DE_ARRAY_DECLARE(jump_pad_t*, jump_pads);
 	DE_LINKED_LIST_DECLARE(struct projectile_t, projectiles);
 	DE_LINKED_LIST_DECLARE(struct actor_t, actors);
 };

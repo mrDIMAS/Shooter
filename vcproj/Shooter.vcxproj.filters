@@ -292,6 +292,12 @@
     <ClCompile Include="..\..\DmitrysEngine\gui\stack_panel.c">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\footstep_sound_map.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\core\hash.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\DmitrysEngine\core\array.h">
@@ -586,6 +592,12 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\DmitrysEngine\gui\stack_panel.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\footstep_sound_map.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\core\hash.h">
       <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>

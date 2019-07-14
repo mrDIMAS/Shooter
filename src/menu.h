@@ -32,6 +32,13 @@ typedef struct settings_page_t {
 	menu_t* menu;
 	de_gui_node_t* window;
 	de_video_mode_array_t video_modes;
+
+	de_gui_node_t* ss_video_mode;
+	de_gui_node_t* cb_fullscreen;
+	de_gui_node_t* ss_shadows_distance;
+	de_gui_node_t* ss_shadows_size;
+	de_gui_node_t* sb_sound_volume;
+	de_gui_node_t* sb_music_volume;
 } settings_page_t;
 
 typedef struct game_settings_t {
