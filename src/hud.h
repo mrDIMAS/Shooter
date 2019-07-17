@@ -22,6 +22,9 @@
 struct hud_t {
 	game_t* game;
 	de_gui_node_t* root;
+
+	de_gui_node_t* ammo;
+	de_gui_node_t* health;
 };
 
 hud_t* hud_create(game_t* game);
@@ -29,5 +32,7 @@ hud_t* hud_create(game_t* game);
 void hud_free(hud_t* hud);
 
 void hud_set_visible(hud_t* hud, bool visible);
+
+void hud_update(hud_t* hud, float health, size_t ammo);
 
 bool hud_process_event(hud_t* hud, de_event_t* evt);

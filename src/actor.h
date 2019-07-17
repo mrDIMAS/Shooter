@@ -32,6 +32,7 @@ struct actor_t {
 	de_body_t* body;
 	de_node_t* pivot;
 	float move_speed;
+	float health;
 	union {
 		player_t player;
 		bot_t bot;

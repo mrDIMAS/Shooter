@@ -143,6 +143,9 @@ level_t* level_create_test(game_t* game)
 	actor_t* bot = actor_create(level, ACTOR_TYPE_BOT);
 	actor_set_position(bot, &(de_vec3_t){-1.0, 0.0, -1.0});
 
+	item_t* medkit = item_create(level, ITEM_TYPE_MEDKIT);
+	item_set_position(medkit, &(de_vec3_t){0.0f, 0.1f, 0.0f});
+
 	/* Ripper */
 	de_path_append_cstr(&res_path, "data/models/ripper.fbx");
 	de_resource_t* res = de_core_request_resource(game->core, DE_RESOURCE_TYPE_MODEL, &res_path);
@@ -195,8 +198,12 @@ level_t* level_create_test(game_t* game)
 	return level;
 }
 
-void level_update(level_t* level)
+void level_update(level_t* level, float dt)
 {
+	for(size_t i = 0; i < level->items.size; ++i) {
+		item_update(level->items.data[i], dt);
+	}
+
 	for (actor_t* actor = level->actors.head; actor; actor = actor->next) {
 		actor_update(actor);
 	}
@@ -212,11 +219,24 @@ void level_update(level_t* level)
 
 void level_free(level_t* level)
 {
+	/* free jump pads */
 	while (level->jump_pads.size) {
 		jump_pad_free(DE_ARRAY_LAST(level->jump_pads));
 	}
-	footstep_sound_map_free(&level->footstep_sound_map);
-	actor_free(level->player);
+	DE_ARRAY_FREE(level->jump_pads);
+
+	/* free actors */
+	while (level->actors.head) {
+		actor_free(level->actors.head);
+	}
+
+	/* free items */
+	while(level->items.size) {
+		item_free(DE_ARRAY_LAST(level->items));
+	}
+	DE_ARRAY_FREE(level->items);
+
+	footstep_sound_map_free(&level->footstep_sound_map);	
 	de_scene_free(level->scene);
 	de_free(level);
 }

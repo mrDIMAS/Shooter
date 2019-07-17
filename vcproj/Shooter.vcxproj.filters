@@ -298,6 +298,9 @@
     <ClCompile Include="..\..\DmitrysEngine\core\hash.c">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\item.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\DmitrysEngine\core\array.h">
@@ -599,6 +602,9 @@
     </ClInclude>
     <ClInclude Include="..\..\DmitrysEngine\core\hash.h">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\item.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

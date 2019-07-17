@@ -24,6 +24,7 @@ weapon_t* weapon_create(level_t* level, weapon_type_t type)
 	weapon_t* wpn = DE_NEW(weapon_t);
 	wpn->type = type;
 	wpn->level = level;
+	wpn->ammo = 100;
 
 	de_path_t path;
 	switch (type) {
@@ -95,7 +96,7 @@ bool weapon_visit(de_object_visitor_t* visitor, weapon_t* wpn)
 void weapon_shoot(weapon_t* wpn)
 {
 	const game_t* game = wpn->level->game;
-	if (game->time.seconds - wpn->last_shot_time >= 0.1) {
+	if (game->time.seconds - wpn->last_shot_time >= 0.1 && wpn->ammo > 0) {
 		wpn->offset = (de_vec3_t) { 0.0f, 0.0f, -0.1f };
 
 		de_ray_t ray;
@@ -123,5 +124,7 @@ void weapon_shoot(weapon_t* wpn)
 		wpn->shot_light_radius = 4.0f;
 
 		wpn->last_shot_time = game->time.seconds;
+
+		--wpn->ammo;
 	}
 }

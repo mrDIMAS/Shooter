@@ -40,6 +40,7 @@ actor_t* actor_create(level_t* level, actor_type_t type)
 	actor->parent_level = level;
 	actor->dispatch_table = actor_get_dispatch_table_by_type(type);
 	actor->move_speed = 0.028f;
+	actor->health = 100.0f;
 
 	actor->body = de_body_create(level->scene);
 	de_body_set_gravity(actor->body, &(de_vec3_t) {.y = -20 });

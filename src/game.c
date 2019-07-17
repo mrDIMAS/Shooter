@@ -27,6 +27,7 @@
 #include "player.c"
 #include "menu.c"
 #include "bot.c"
+#include "item.c"
 #include "actor.c"
 #include "footstep_sound_map.c"
 #include "hud.c"
@@ -153,7 +154,7 @@ static void game_main_loop(game_t* game)
 			}
 
 			if (game->level && !game->main_menu->visible) {
-				level_update(game->level);
+				level_update(game->level,(float) dt);
 			}
 
 			if (dt >= 4 * fixed_timestep) {

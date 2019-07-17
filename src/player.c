@@ -122,6 +122,14 @@ static bool player_process_event(actor_t* actor, const de_event_t* evt)
 	return processed;
 }
 
+static weapon_t* player_get_current_weapon(player_t* player)
+{
+	if (player->current_weapon < (int)player->weapons.size) {
+		return player->weapons.data[player->current_weapon];		
+	}
+	return NULL;
+}
+
 static void player_init(actor_t* actor)
 {
 	player_t* p = &actor->s.player;
@@ -195,7 +203,7 @@ static void player_deinit(actor_t* actor)
 	for (size_t i = 0; i < p->weapons.size; ++i) {
 		weapon_free(p->weapons.data[i]);
 	}
-	DE_ARRAY_FREE(p->weapons);	
+	DE_ARRAY_FREE(p->weapons);
 }
 
 static void player_update(actor_t* actor)
@@ -264,9 +272,11 @@ static void player_update(actor_t* actor)
 		weapon_update(player->weapons.data[i]);
 	}
 
-	if (player->controller.shoot && player->current_weapon < (int)player->weapons.size) {
-		weapon_t* wpn = player->weapons.data[player->current_weapon];
-		weapon_shoot(wpn);
+	if (player->controller.shoot) {
+		weapon_t* wpn = player_get_current_weapon(player);
+		if (wpn) {
+			weapon_shoot(wpn);
+		}
 	}
 
 	/* make sure that camera will be always at the top of the body */
@@ -320,7 +330,7 @@ static void player_update(actor_t* actor)
 			for (size_t i = 0; i < de_body_get_contact_count(body); ++i) {
 				de_contact_t* contact = de_body_get_contact(body, i);
 				if (contact->triangle && contact->normal.y > 0.707) {
-					de_resource_t* res = footstep_sound_map_probe(&level->footstep_sound_map, contact->triangle->material_hash); 
+					de_resource_t* res = footstep_sound_map_probe(&level->footstep_sound_map, contact->triangle->material_hash);
 					if (res) {
 						de_sound_buffer_t* buffer = de_resource_to_sound_buffer(res);
 						de_sound_context_t* ctx = de_core_get_sound_context(level->game->core);
@@ -330,7 +340,7 @@ static void player_update(actor_t* actor)
 						de_sound_source_play(src);
 						de_vec3_t pos;
 						de_node_get_global_position(pivot, &pos);
-						de_sound_source_set_position(src, &pos);						
+						de_sound_source_set_position(src, &pos);
 						break;
 					}
 				}
@@ -385,6 +395,9 @@ static void player_update(actor_t* actor)
 
 	de_listener_set_orientation(lst, &look, &(de_vec3_t) { 0, 1, 0 });
 	de_listener_set_position(lst, &camera_global_position);
+
+	weapon_t* wpn = player_get_current_weapon(player);
+	hud_update(actor->parent_level->game->hud, actor->health, wpn ? wpn->ammo : 0);
 }
 
 actor_dispatch_table_t* player_get_dispatch_table()

@@ -34,6 +34,7 @@ struct weapon_t {
 	de_vec3_t offset;
 	de_vec3_t dest_offset;
 	double last_shot_time;
+	size_t ammo;
 };
 
 weapon_t* weapon_create(level_t* level, weapon_type_t type);

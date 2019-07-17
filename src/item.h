@@ -19,30 +19,38 @@
 * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-typedef struct jump_pad_t {
+typedef enum item_type_t {
+	ITEM_TYPE_AK47,
+	ITEM_TYPE_M4,
+	ITEM_TYPE_MEDKIT,
+} item_type_t;
+
+typedef struct item_definition_t {
+	size_t max_ammo;
+	size_t pick_up_ammo;
+	float damage;
+	const char* model_path;
+	int health_restore;	
+	float reactivation_time; /**< Amount of time left for item to become activated again. */
+} item_definition_t;
+
+typedef struct item_t {	
+	item_type_t type;
 	level_t* level;
 	de_node_t* model;
-	de_vec3_t force;
-	de_static_geometry_t* bounds;
-} jump_pad_t;
+	float time_until_reactivation;
+} item_t;
 
-struct level_t {
-	game_t* game;
-	de_scene_t* scene;
-	actor_t* player;
-	footstep_sound_map_t footstep_sound_map;
-	DE_ARRAY_DECLARE(jump_pad_t*, jump_pads);
-	DE_ARRAY_DECLARE(item_t*, items);
-	DE_LINKED_LIST_DECLARE(struct projectile_t, projectiles);
-	DE_LINKED_LIST_DECLARE(struct actor_t, actors);
-};
+const item_definition_t* item_definition_from_item_type(item_type_t type);
 
-void level_create_collider(level_t* level);
+item_t* item_create(level_t* level, item_type_t type);
 
-bool level_visit(de_object_visitor_t* visitor, level_t* level);
+void item_set_position(item_t* item, const de_vec3_t* pos);
 
-level_t* level_create_test(game_t* game);
+bool item_is_active(item_t* item);
 
-void level_update(level_t* level, float dt);
+void item_deactivate(item_t* item);
 
-void level_free(level_t* level);
+void item_free(item_t* item);
+
+void item_update(item_t* item, float dt);

@@ -115,6 +115,7 @@ void footstep_sound_map_free(footstep_sound_map_t* map)
 		for (size_t k = 0; k < group->buffers.size; ++k) {
 			de_resource_release(group->buffers.data[k]);
 		}
+		DE_ARRAY_FREE(group->buffers);
 	}
 	DE_ARRAY_FREE(map->groups);
 

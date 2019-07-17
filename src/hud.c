@@ -37,27 +37,30 @@ hud_t* hud_create(game_t* game)
 		}
 	});
 
-	de_gui_node_create_with_desc(gui, DE_GUI_NODE_TEXT, &(de_gui_node_descriptor_t) {
+	hud->health = de_gui_node_create_with_desc(gui, DE_GUI_NODE_TEXT, &(de_gui_node_descriptor_t) {
 		.parent = hud->root,
 		.vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_BOTTOM,
 		.horizontal_alignment = DE_GUI_HORIZONTAL_ALIGNMENT_LEFT,
-		.width = 100,
+		.width = 200,
 		.height = 30,
 		.row = 0, .column = 0,
+		.margin = (de_gui_thickness_t) { .left = 5 },
 		.s.text_block = (de_gui_text_descriptor_t) {
 			.text = "Health"
 		}
 	});
 
-	de_gui_node_create_with_desc(gui, DE_GUI_NODE_TEXT, &(de_gui_node_descriptor_t) {
+	hud->ammo = de_gui_node_create_with_desc(gui, DE_GUI_NODE_TEXT, &(de_gui_node_descriptor_t) {
 		.parent = hud->root,
 		.vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_BOTTOM,
 		.horizontal_alignment = DE_GUI_HORIZONTAL_ALIGNMENT_RIGHT,
-		.width = 100,
+		.width = 200,
 		.height = 30,
 		.row = 0, .column = 0,
+		.margin = (de_gui_thickness_t) { .right = 5 },
 		.s.text_block = (de_gui_text_descriptor_t) {
-			.text = "Ammo"
+			.text = "Ammo",
+			.horizontal_alignment = DE_GUI_HORIZONTAL_ALIGNMENT_RIGHT,
 		}
 	});
 
@@ -82,6 +85,18 @@ hud_t* hud_create(game_t* game)
 void hud_free(hud_t* hud)
 {
 	de_free(hud);
+}
+
+void hud_update(hud_t* hud, float health, size_t ammo) 
+{
+	DE_ASSERT(hud);
+
+	char buffer[512];
+	snprintf(buffer, sizeof(buffer), "Health: %.1f", health);
+	de_gui_text_set_text_utf8(hud->health, buffer);
+
+	snprintf(buffer, sizeof(buffer), "Ammo: %d", ammo);
+	de_gui_text_set_text_utf8(hud->ammo, buffer);
 }
 
 void hud_set_visible(hud_t* hud, bool visible)

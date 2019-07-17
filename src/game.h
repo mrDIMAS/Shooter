@@ -30,6 +30,7 @@ typedef struct weapon_t weapon_t;
 typedef struct bot_t bot_t;
 typedef struct actor_t actor_t;
 typedef struct hud_t hud_t;
+typedef struct item_t item_t;
 
 typedef struct game_time_t {
 	double seconds; /* Time from start. */
@@ -49,7 +50,6 @@ bool game_save(game_t* game);
 
 bool game_load(game_t* game);
 
-
 typedef struct actor_dispatch_table_t {
 	void(*init)(actor_t* actor);
 	void(*deinit)(actor_t* actor);
@@ -61,6 +61,7 @@ typedef struct actor_dispatch_table_t {
 #include "footstep_sound_map.h"
 #include "level.h"
 #include "weapon.h"
+#include "item.h"
 #include "player.h"
 #include "menu.h"
 #include "bot.h"
