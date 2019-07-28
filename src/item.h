@@ -34,12 +34,12 @@ typedef struct item_definition_t {
 	float reactivation_time; /**< Amount of time left for item to become activated again. */
 } item_definition_t;
 
-typedef struct item_t {	
+struct item_t {	
 	item_type_t type;
 	level_t* level;
 	de_node_t* model;
 	float time_until_reactivation;
-} item_t;
+};
 
 const item_definition_t* item_definition_from_item_type(item_type_t type);
 

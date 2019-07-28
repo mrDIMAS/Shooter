@@ -28,6 +28,7 @@ static actor_dispatch_table_t* actor_get_dispatch_table_by_type(actor_type_t typ
 		case ACTOR_TYPE_PLAYER:
 			return player_get_dispatch_table();
 		default:
+            return &stub;
 			break;
 	}
 	return NULL;

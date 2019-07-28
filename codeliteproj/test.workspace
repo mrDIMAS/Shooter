@@ -10,11 +10,11 @@
       <Environment/>
       <Project Name="test" ConfigName="Release"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Linux_Debug" Selected="yes">
+    <WorkspaceConfiguration Name="Linux_Debug" Selected="no">
       <Environment/>
       <Project Name="test" ConfigName="Linux_Debug"/>
     </WorkspaceConfiguration>
-    <WorkspaceConfiguration Name="Linux_Release" Selected="no">
+    <WorkspaceConfiguration Name="Linux_Release" Selected="yes">
       <Environment/>
       <Project Name="test" ConfigName="Linux_Release"/>
     </WorkspaceConfiguration>

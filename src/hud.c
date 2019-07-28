@@ -97,7 +97,7 @@ void hud_update(hud_t* hud, float health, size_t ammo)
 	snprintf(buffer, sizeof(buffer), "Health: %.1f", health);
 	de_gui_text_set_text_utf8(hud->health, buffer);
 
-	snprintf(buffer, sizeof(buffer), "Ammo: %d", ammo);
+	snprintf(buffer, sizeof(buffer), "Ammo: %d", (int)ammo);
 	de_gui_text_set_text_utf8(hud->ammo, buffer);
 }
 

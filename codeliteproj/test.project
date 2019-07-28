@@ -118,18 +118,19 @@
         <SearchPaths/>
       </Completion>
     </Configuration>
-    <Configuration Name="Linux_Release" CompilerType="" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+    <Configuration Name="Linux_Release" CompilerType="GCC" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="" C_Options="-g;-O3;-Wall;-std=c99;-pedantic;-Werror;" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="."/>
-        <IncludePath Value="../../."/>
-        <IncludePath Value="../../external/"/>
+        <IncludePath Value="../../DmitrysEngine/"/>
+        <IncludePath Value="../../DmitrysEngine/external/"/>
         <Preprocessor Value="NDEBUG"/>
       </Compiler>
       <Linker Options="" Required="yes">
-        <Library Value="opengl32"/>
-        <Library Value="dsound"/>
-        <Library Value="gdi32"/>
-        <Library Value="dxguid"/>
+        <Library Value="GL"/>
+        <Library Value="pthread"/>
+        <Library Value="asound"/>
+        <Library Value="X11"/>
+        <Library Value="Xrandr"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="../bin/Shooter" IntermediateDirectory="./Release" Command="../bin/Shooter" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="../bin/" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
@@ -213,4 +214,26 @@
       </Completion>
     </Configuration>
   </Settings>
+  <VirtualDirectory Name="src">
+    <File Name="../src/footstep_sound_map.h" ExcludeProjConfig="Linux_Release"/>
+    <File Name="../src/actor.c" ExcludeProjConfig="Linux_Release"/>
+    <File Name="../src/bot.h" ExcludeProjConfig="Linux_Release"/>
+    <File Name="../src/hud.h" ExcludeProjConfig="Linux_Release"/>
+    <File Name="../src/projectile.h" ExcludeProjConfig="Linux_Release"/>
+    <File Name="../src/player.h" ExcludeProjConfig="Linux_Release"/>
+    <File Name="../src/actor.h" ExcludeProjConfig="Linux_Release"/>
+    <File Name="../src/hud.c" ExcludeProjConfig="Linux_Release"/>
+    <File Name="../src/weapon.c" ExcludeProjConfig="Linux_Release"/>
+    <File Name="../src/footstep_sound_map.c" ExcludeProjConfig="Linux_Release"/>
+    <File Name="../src/projectile.c" ExcludeProjConfig="Linux_Release"/>
+    <File Name="../src/level.c" ExcludeProjConfig="Linux_Release"/>
+    <File Name="../src/weapon.h" ExcludeProjConfig="Linux_Release"/>
+    <File Name="../src/bot.c" ExcludeProjConfig="Linux_Release"/>
+    <File Name="../src/level.h" ExcludeProjConfig="Linux_Release"/>
+    <File Name="../src/menu.c" ExcludeProjConfig="Linux_Release"/>
+    <File Name="../src/player.c" ExcludeProjConfig="Linux_Release"/>
+    <File Name="../src/item.c" ExcludeProjConfig="Linux_Release"/>
+    <File Name="../src/item.h" ExcludeProjConfig="Linux_Release"/>
+    <File Name="../src/menu.h" ExcludeProjConfig="Linux_Release"/>
+  </VirtualDirectory>
 </CodeLite_Project>
