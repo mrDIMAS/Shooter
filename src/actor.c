@@ -31,7 +31,6 @@ static actor_dispatch_table_t* actor_get_dispatch_table_by_type(actor_type_t typ
             return &stub;
 			break;
 	}
-	return NULL;
 }
 
 actor_t* actor_create(level_t* level, actor_type_t type)
