@@ -182,6 +182,7 @@ static bool player_visit(de_object_visitor_t* visitor, actor_t* actor)
 	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "FlashLight", &player->flash_light, de_node_visit);
 	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "WeaponPivot", &player->weapon_pivot, de_node_visit);
 	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "LaserDot", &player->laser_dot, de_node_visit);
+	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "PickSphere", &player->ray_cast_pick, de_node_visit);
 	result &= de_object_visitor_visit_float(visitor, "Pitch", &player->pitch);
 	result &= de_object_visitor_visit_float(visitor, "DesiredPitch", &player->desired_pitch);
 	result &= de_object_visitor_visit_float(visitor, "Yaw", &player->yaw);
@@ -199,7 +200,7 @@ static bool player_visit(de_object_visitor_t* visitor, actor_t* actor)
 	result &= de_object_visitor_visit_vec3(visitor, "WeaponOffset", &player->weapon_offset);
 	result &= de_object_visitor_visit_vec3(visitor, "WeaponDestOffset", &player->weapon_dest_offset);
 	result &= de_object_visitor_visit_vec3(visitor, "WeaponPosition", &player->weapon_position);
-	result &= DE_OBJECT_VISITOR_VISIT_POINTER_ARRAY(visitor, "Weapons", player->weapons, weapon_visit);
+	result &= DE_OBJECT_VISITOR_VISIT_POINTER_ARRAY(visitor, "Weapons", player->weapons, weapon_visit);	
 	return result;
 }
 
