@@ -34,13 +34,14 @@ struct player_t {
 	de_node_t* camera;
 	de_node_t* flash_light;
 	de_node_t* weapon_pivot;
+	de_node_t* ray_cast_pick;
 	bool is_crouch;
 	float pitch;
 	float desired_pitch;
 	float yaw;
 	float desired_yaw;
-	float stand_body_radius;
-	float crouch_body_radius;
+	float stand_body_height;
+	float crouch_body_height;
 	float stand_up_speed;
 	float sit_down_speed;
 	float run_speed_multiplier;
@@ -56,6 +57,7 @@ struct player_t {
 	DE_ARRAY_DECLARE(weapon_t*, weapons);
 	player_controller_t controller;
 	de_node_t* laser_dot;
+	de_ray_cast_result_array_t ray_cast_list;
 };
 
 actor_dispatch_table_t* player_get_dispatch_table();

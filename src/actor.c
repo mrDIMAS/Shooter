@@ -42,7 +42,7 @@ actor_t* actor_create(level_t* level, actor_type_t type)
 	actor->move_speed = 0.028f;
 	actor->health = 100.0f;
 
-	actor->body = de_body_create(level->scene);
+	actor->body = de_body_create(level->scene, de_convex_shape_create_capsule(DE_AXIS_Y, 0.2f, 0.5f));
 	de_body_set_gravity(actor->body, &(de_vec3_t) {.y = -20 });
 
 	actor->pivot = de_node_create(level->scene, DE_NODE_TYPE_BASE);

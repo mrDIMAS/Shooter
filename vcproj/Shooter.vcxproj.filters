@@ -301,6 +301,12 @@
     <ClCompile Include="..\src\item.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\physics\gjk_epa.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DmitrysEngine\physics\shape.c">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\DmitrysEngine\core\array.h">
@@ -605,6 +611,12 @@
     </ClInclude>
     <ClInclude Include="..\src\item.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\physics\gjk_epa.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DmitrysEngine\physics\shape.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

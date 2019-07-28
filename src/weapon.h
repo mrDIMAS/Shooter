@@ -34,7 +34,8 @@ struct weapon_t {
 	de_vec3_t offset;
 	de_vec3_t dest_offset;
 	double last_shot_time;
-	size_t ammo;
+	uint32_t ammo;
+	de_ray_cast_result_array_t ray_cast_list;
 };
 
 weapon_t* weapon_create(level_t* level, weapon_type_t type);

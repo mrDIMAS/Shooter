@@ -90,6 +90,7 @@ bool weapon_visit(de_object_visitor_t* visitor, weapon_t* wpn)
 	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "Level", &wpn->level, level_visit);
 	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "Model", &wpn->model, de_node_visit);
 	result &= DE_OBJECT_VISITOR_VISIT_POINTER(visitor, "ShotLight", &wpn->shot_light, de_node_visit);
+	result &= de_object_visitor_visit_uint32(visitor, "Ammo", &wpn->ammo);
 	return result;
 }
 
@@ -115,11 +116,11 @@ void weapon_shoot(weapon_t* wpn)
 			de_sound_source_play(shot_sound);
 			de_sound_source_set_position(shot_sound, &ray.origin);
 		}
+				/*
+		if (de_ray_cast(wpn->level->scene, &ray,
+			DE_RAY_CAST_FLAGS_IGNORE_BODY_IN_RAY | DE_RAY_CAST_FLAGS_SORT_RESULTS, &wpn->ray_cast_list)) {
 
-		de_ray_cast_result_t result;
-		if (de_ray_cast_closest(wpn->level->scene, &ray, DE_RAY_CAST_FLAGS_IGNORE_BODY_IN_RAY, &result)) {
-
-		}
+		}*/
 
 		wpn->shot_light_radius = 4.0f;
 

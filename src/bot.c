@@ -29,7 +29,11 @@ static void bot_init(actor_t* actor)
 	if (soldier_model) {
 		bot->model = de_model_instantiate(de_resource_to_model(soldier_model), actor->parent_level->scene);
 		de_node_attach(bot->model, actor->pivot);
-		de_body_set_radius(actor->body, 0.25f);
+
+		de_capsule_shape_t* capsule_shape = de_convex_shape_to_capsule(de_body_get_shape(actor->body));
+		de_capsule_shape_set_height(capsule_shape, 0.5f);
+		de_capsule_shape_set_radius(capsule_shape, 0.25f);
+		actor->move_speed = 0;
 	}
 }
 

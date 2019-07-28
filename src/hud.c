@@ -37,6 +37,8 @@ hud_t* hud_create(game_t* game)
 		}
 	});
 
+
+
 	hud->health = de_gui_node_create_with_desc(gui, DE_GUI_NODE_TEXT, &(de_gui_node_descriptor_t) {
 		.parent = hud->root,
 		.vertical_alignment = DE_GUI_VERTICAL_ALIGNMENT_BOTTOM,

@@ -147,7 +147,7 @@ static void game_main_loop(game_t* game)
 
 			de_sound_context_update(de_core_get_sound_context(game->core));
 			de_gui_update(gui);
-			de_physics_step(game->core, fixed_timestep);
+			
 			DE_LINKED_LIST_FOR_EACH_H(de_scene_t*, scene, de_core_get_first_scene(game->core))
 			{
 				de_scene_update(scene, fixed_timestep);
@@ -156,6 +156,7 @@ static void game_main_loop(game_t* game)
 			if (game->level && !game->main_menu->visible) {
 				level_update(game->level,(float) dt);
 			}
+			de_physics_step(game->core, fixed_timestep);
 
 			if (dt >= 4 * fixed_timestep) {
 				game->time.seconds = de_time_get_seconds();
@@ -190,8 +191,23 @@ static void game_close(game_t* game)
 	de_free(game);
 }
 
+void test_ray_cap() 
+{
+	de_ray_t ray;
+	de_ray_by_two_points(&ray, &(de_vec3_t){-1.0f, 0.25f, -0.20f}, &(de_vec3_t) { 1.0f, 0.25f, 0.0f });
+
+	de_vec3_t int_points[2];
+	if(de_ray_capsule_intersection(&ray, &(de_vec3_t){ 0.0f, 0.0f, 0.0f }, &(de_vec3_t){0, 1.0f, 0.0f}, 0.5f, int_points)) {
+		printf("intersection");
+	} else {
+		printf("no intersection");
+	}
+}
+
 int main(int argc, char** argv)
 {
+	test_ray_cap();
+
 	DE_UNUSED(argc);
 	DE_UNUSED(argv);
 

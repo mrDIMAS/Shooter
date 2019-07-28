@@ -134,16 +134,17 @@ static void player_init(actor_t* actor)
 {
 	player_t* p = &actor->s.player;
 	actor->move_speed = 0.06f;
-	p->stand_body_radius = 0.5f;
-	p->crouch_body_radius = 0.30f;
+	p->stand_body_height = 0.5f;
+	p->crouch_body_height = 0.30f;
 	p->sit_down_speed = 0.045f;
 	p->stand_up_speed = 0.06f;
 	p->run_speed_multiplier = 1.75f;
-	p->camera_position = (de_vec3_t) { 0, p->stand_body_radius, 0 };
+	p->camera_position = (de_vec3_t) { 0, p->stand_body_height, 0 };
 	level_t* level = actor->parent_level;
 	de_scene_t* scene = level->scene;
 
-	de_body_set_radius(actor->body, p->stand_body_radius);
+	de_capsule_shape_t* capsule_shape = de_convex_shape_to_capsule(de_body_get_shape(actor->body));
+	de_capsule_shape_set_height(capsule_shape, p->stand_body_height);
 
 	p->camera = de_node_create(scene, DE_NODE_TYPE_CAMERA);
 	de_node_set_local_position(p->camera, &p->camera_position);
@@ -166,6 +167,11 @@ static void player_init(actor_t* actor)
 
 	player_add_weapon(p, weapon_create(level, WEAPON_TYPE_M4));
 	player_add_weapon(p, weapon_create(level, WEAPON_TYPE_AK47));
+
+	de_path_t path;
+	de_path_from_cstr_as_view(&path, "data/models/sphere.fbx");
+	de_resource_t* res = de_core_request_resource(actor->parent_level->game->core, DE_RESOURCE_TYPE_MODEL, &path);
+	p->ray_cast_pick = de_model_instantiate(de_resource_to_model(res), actor->parent_level->scene);
 }
 
 static bool player_visit(de_object_visitor_t* visitor, actor_t* actor)
@@ -180,8 +186,8 @@ static bool player_visit(de_object_visitor_t* visitor, actor_t* actor)
 	result &= de_object_visitor_visit_float(visitor, "DesiredPitch", &player->desired_pitch);
 	result &= de_object_visitor_visit_float(visitor, "Yaw", &player->yaw);
 	result &= de_object_visitor_visit_float(visitor, "DesiredYaw", &player->desired_yaw);
-	result &= de_object_visitor_visit_float(visitor, "StandBodyRadius", &player->stand_body_radius);
-	result &= de_object_visitor_visit_float(visitor, "CrouchBodyRadius", &player->crouch_body_radius);
+	result &= de_object_visitor_visit_float(visitor, "StandBodyRadius", &player->stand_body_height);
+	result &= de_object_visitor_visit_float(visitor, "CrouchBodyRadius", &player->crouch_body_height);
 	result &= de_object_visitor_visit_float(visitor, "StandUpSpeed", &player->stand_up_speed);
 	result &= de_object_visitor_visit_float(visitor, "SitDownSpeed", &player->sit_down_speed);
 	result &= de_object_visitor_visit_float(visitor, "RunSpeedMultiplier", &player->run_speed_multiplier);
@@ -241,30 +247,32 @@ static void player_update(actor_t* actor)
 		is_moving = true;
 	}
 
-	player->is_crouch = de_body_get_radius(body) < (player->stand_body_radius - 3 * FLT_EPSILON);
+	de_capsule_shape_t* capsule_shape = de_convex_shape_to_capsule(de_body_get_shape(body));
+	const float actual_height = de_capsule_shape_get_height(capsule_shape);
+
+	player->is_crouch = actual_height < (player->stand_body_height - 3 * FLT_EPSILON);
 
 	/* crouch */
 	if (player->controller.crouch) {
-		float radius = de_body_get_radius(body);
-		radius -= player->sit_down_speed;
-		if (radius < player->crouch_body_radius) {
-			radius = player->crouch_body_radius;
+		float height = actual_height;
+		height -= player->sit_down_speed;
+		if (height < player->crouch_body_height) {
+			height = player->crouch_body_height;
 		}
-		de_body_set_radius(body, radius);
+		de_capsule_shape_set_height(capsule_shape, height);
 	} else {
 		/* make sure that we have enough space to stand up by casting ray up */
 		de_ray_t probe_ray;
 		de_vec3_t probe_ray_end;
-		de_vec3_add(&probe_ray_end, &body->position, &(de_vec3_t) {0, player->stand_body_radius, 0});
+		de_vec3_add(&probe_ray_end, &body->position, &(de_vec3_t) {0, player->stand_body_height, 0});
 		de_ray_by_two_points(&probe_ray, &body->position, &probe_ray_end);
-		de_ray_cast_result_t ray_cast_result;
-		if (!de_ray_cast_closest(actor->parent_level->scene, &probe_ray, DE_RAY_CAST_FLAGS_IGNORE_BODY_IN_RAY, &ray_cast_result)) {
-			float radius = de_body_get_radius(body);
-			radius += player->stand_up_speed;
-			if (radius > player->stand_body_radius) {
-				radius = player->stand_body_radius;
+		if (!de_ray_cast(actor->parent_level->scene, &probe_ray, DE_RAY_CAST_FLAGS_IGNORE_BODY, &player->ray_cast_list)) {
+			float height = actual_height;
+			height += player->stand_up_speed;
+			if (height > player->stand_body_height) {
+				height = player->stand_body_height;
 			}
-			de_body_set_radius(body, radius);
+			de_capsule_shape_set_height(capsule_shape, height);
 		}
 	}
 
@@ -280,7 +288,7 @@ static void player_update(actor_t* actor)
 	}
 
 	/* make sure that camera will be always at the top of the body */
-	player->camera_position.y = de_body_get_radius(body);
+	player->camera_position.y = actual_height;
 
 	/* apply camera wobbling */
 	if (is_moving && de_body_get_contact_count(body) > 0) {
@@ -359,7 +367,7 @@ static void player_update(actor_t* actor)
 		/* a bit of air-control */
 		de_body_add_acceleration(body, &(de_vec3_t) {
 			.x = direction.x * 5.0f,
-				.z = direction.z * 5.0f,
+			.z = direction.z * 5.0f,
 		});
 	}
 
@@ -378,15 +386,28 @@ static void player_update(actor_t* actor)
 	const de_ray_t laser_sight_ray = {
 		.origin = camera_global_position, .dir = { camera_look.x * 100, camera_look.y * 100, camera_look.z * 100 }
 	};
-	de_ray_cast_result_t ray_cast_result;
-	if (de_ray_cast_closest(actor->parent_level->scene, &laser_sight_ray, DE_RAY_CAST_FLAGS_IGNORE_BODY_IN_RAY, &ray_cast_result)) {
-		de_vec3_t dot_offset;
-		de_vec3_normalize(&dot_offset, &ray_cast_result.normal);
-		de_vec3_scale(&dot_offset, &dot_offset, 0.2f);
 
-		de_vec3_t laser_dot_position;
-		de_vec3_add(&laser_dot_position, &ray_cast_result.position, &dot_offset);
-		de_node_set_local_position(player->laser_dot, &laser_dot_position);
+	if (de_ray_cast(actor->parent_level->scene, &laser_sight_ray, DE_RAY_CAST_FLAGS_SORT_RESULTS, &player->ray_cast_list)) {
+
+		de_ray_cast_result_t* closest = NULL;
+		for(size_t i = 0; i < player->ray_cast_list.size; ++i) {
+			if(player->ray_cast_list.data[i].body != body) {
+				closest = &player->ray_cast_list.data[i];
+				break;
+			}
+		}
+
+		if (closest) {
+			de_vec3_t dot_offset;
+			de_vec3_normalize(&dot_offset, &closest->normal);
+			de_vec3_scale(&dot_offset, &dot_offset, 0.2f);
+
+			de_vec3_t laser_dot_position;
+			de_vec3_add(&laser_dot_position, &closest->position, &dot_offset);
+			de_node_set_local_position(player->laser_dot, &laser_dot_position);
+
+			de_node_set_local_position(player->ray_cast_pick, &closest->position);
+		}
 	}
 
 	/* listener */

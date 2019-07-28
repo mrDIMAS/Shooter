@@ -60,8 +60,7 @@ projectile_t* projectile_create(level_t* level, projectile_type_t type, const de
 		p->model = de_model_instantiate(model, level->scene);				
 	}
 	if (p->definition->need_body) {
-		de_body_t* body = de_body_create(level->scene);
-		de_body_set_radius(body, p->definition->body_radius);
+		de_body_t* body = de_body_create(level->scene, de_convex_shape_create_sphere(p->definition->body_radius));		
 		de_node_set_body(p->model, body);		
 	}
 	p->lifetime = p->definition->lifetime;
